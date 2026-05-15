@@ -25,22 +25,27 @@ export default function HomePage() {
         <div className="container-custom grid lg:grid-cols-2 gap-8 items-center py-section lg:py-32">
           {/* Text Content */}
           <div className="space-y-6 animate-fade-in-up">
-            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-              New Collection
+            <p
+              className="text-sm uppercase tracking-[0.2em] font-bold"
+              style={{ color: 'hsl(var(--accent))' }}
+            >
+              ✦ Bold Collection
             </p>
-            <h1 className="text-display font-heading font-semibold text-balance">
-              Elevate Your Everyday
+            <h1 className="text-display font-heading font-bold text-balance uppercase">
+              Designed To Stand Out.
             </h1>
             <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
-              Thoughtfully designed products that bring beauty and function to your daily rituals.
+              High-contrast pieces for people who refuse to blend in. Shop the
+              loudest drop of the season.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
                 href="/products"
-                className="btn-brand-primary inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold uppercase tracking-wide transition-opacity"
+                className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: 'hsl(var(--accent))' }}
                 prefetch={true}
               >
-                Shop Now
+                Shop the Drop
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -114,9 +119,14 @@ export default function HomePage() {
               />
             </div>
             <div className="space-y-6 lg:max-w-md">
-              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Our Philosophy</p>
-              <h2 className="text-h2 font-heading font-semibold">
-                Crafted With Intention
+              <p
+                className="text-sm uppercase tracking-[0.2em] font-bold"
+                style={{ color: 'hsl(var(--accent))' }}
+              >
+                Why Bold
+              </p>
+              <h2 className="text-h2 font-heading font-bold uppercase">
+                Quiet Is Overrated
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Every product in our collection is chosen for its quality, design, and the story behind it.
