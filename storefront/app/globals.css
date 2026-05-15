@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Bold template — high-contrast vibrant accent on near-white background */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
+    --muted: 30 8% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 15 90% 55%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 92%;
+    --ring: 15 90% 55%;
+    --primary: 0 0% 8%;
+    --primary-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Brand colors (dynamically injected from Store.metadata.brand) */
+    /* Access in CSS: var(--brand-primary), var(--brand-secondary) */
+    /* Managed by BrandStyleInjector component */
+  }
+
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 15 95% 60%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 16%;
+    --ring: 15 95% 60%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 6%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .container-custom {
+    @apply mx-auto max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-px w-0 bg-foreground transition-all duration-300;
+  }
+  .link-underline:hover::after {
+    @apply w-full;
+  }
+
+  /* Brand color utilities - uses colors from Store.metadata.brand */
+  .btn-brand-primary {
+    background-color: var(--brand-primary, hsl(var(--primary)));
+    color: white;
+  }
+  .btn-brand-primary:hover {
+    opacity: 0.9;
+  }
+
+  .text-brand-primary {
+    color: var(--brand-primary, hsl(var(--primary)));
+  }
+
+  .text-brand-secondary {
+    color: var(--brand-secondary, hsl(var(--accent)));
+  }
+
+  .border-brand-primary {
+    border-color: var(--brand-primary, hsl(var(--border)));
+  }
+
+  .bg-brand-primary {
+    background-color: var(--brand-primary, hsl(var(--primary)));
+  }
+
+  .bg-brand-secondary {
+    background-color: var(--brand-secondary, hsl(var(--accent)));
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-accent/20 text-foreground;
+}
+
+/* Focus styles */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ring;
+}
+
+/* Cookie consent animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}

@@ -1,0 +1,199 @@
+'use client'
+
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { CheckCircle, Package, ArrowRight } from 'lucide-react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import { trackPurchase } from '@/lib/analytics'
+import { getMedusaClient } from '@/lib/medusa-client'
+import { ClientPluginSlot } from '@/components/ClientPluginSlot'
+import type { Order, OrderItem } from '@/types'
+
+type PurchaseTrackingDetails = {
+  value?: number
+  currency?: string
+  contentIds: string[]
+  contents?: Array<{
+    id: string
+    quantity?: number
+    item_price?: number
+  }>
+  numItems?: number
+}
+
+function toCurrencyValue(amount: number | null | undefined): number | undefined {
+  if (typeof amount !== 'number' || Number.isNaN(amount)) return undefined
+  return Math.round(amount * 100) / 100
+}
+
+function buildPurchaseTrackingDetails(order: Order): PurchaseTrackingDetails {
+  const items: OrderItem[] = Array.isArray(order?.items) ? order.items : []
+
+  const contentIds = items
+    .map((item: OrderItem) => item.variant_id || item.variant?.id || item.product_id)
+    .filter(Boolean)
+
+  const contents = items
+    .map((item: OrderItem) => {
+      const id = item.variant_id || item.variant?.id || item.product_id
+
+      if (!id) {
+        return null
+      }
+
+      return {
+        id,
+        quantity: item.quantity,
+        item_price: toCurrencyValue(item.unit_price ?? item.total),
+      }
+    })
+    .filter(Boolean) as Array<{
+    id: string
+    quantity?: number
+    item_price?: number
+  }>
+
+  return {
+    value: toCurrencyValue(order?.total),
+    currency: order?.currency_code,
+    contentIds,
+    contents: contents.length > 0 ? contents : undefined,
+    numItems: items.reduce((sum: number, item: OrderItem) => sum + (item.quantity || 0), 0),
+  }
+}
+
+function OrderSuccessContent() {
+  const searchParams = useSearchParams()
+  const orderId = searchParams.get('order')
+
+  const analyticsTracked = useRef(false)
+  const [purchaseDetails, setPurchaseDetails] = useState<PurchaseTrackingDetails | null>(null)
+  const [purchaseDetailsLoaded, setPurchaseDetailsLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!orderId || !purchaseDetailsLoaded || analyticsTracked.current) {
+      return
+    }
+
+    analyticsTracked.current = true
+
+    trackPurchase(orderId, {
+      value: purchaseDetails?.value,
+      currency: purchaseDetails?.currency,
+      itemCount: purchaseDetails?.numItems,
+      contentIds: purchaseDetails?.contentIds,
+      contents: purchaseDetails?.contents,
+    })
+  }, [orderId, purchaseDetails, purchaseDetailsLoaded])
+
+  useEffect(() => {
+    if (!orderId) {
+      setPurchaseDetails(null)
+      setPurchaseDetailsLoaded(false)
+      return
+    }
+
+    let cancelled = false
+
+    const loadOrder = async () => {
+      try {
+        const { order } = await getMedusaClient().store.order.retrieve(orderId)
+
+        if (!cancelled) {
+          setPurchaseDetails(buildPurchaseTrackingDetails(order))
+        }
+      } catch {
+        if (!cancelled) {
+          setPurchaseDetails({
+            contentIds: [orderId],
+          })
+        }
+      } finally {
+        if (!cancelled) {
+          setPurchaseDetailsLoaded(true)
+        }
+      }
+    }
+
+    loadOrder()
+
+    return () => {
+      cancelled = true
+    }
+  }, [orderId])
+
+
+  return (
+    <div className="container-custom py-section">
+      <div className="max-w-lg mx-auto text-center">
+        <CheckCircle className="h-16 w-16 mx-auto text-green-600" strokeWidth={1.5} />
+
+        <h1 className="mt-6 text-h1 font-heading font-semibold">Thank You!</h1>
+        <p className="mt-3 text-muted-foreground">
+          Your order has been placed successfully.
+        </p>
+
+        {orderId && (
+          <div className="mt-6 p-4 border rounded-sm bg-muted/30">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Order ID</p>
+            <p className="mt-1 text-sm font-mono font-medium">{orderId}</p>
+          </div>
+        )}
+
+        <div className="mt-8 p-6 border rounded-sm text-left space-y-3">
+          <div className="flex items-start gap-3">
+            <Package className="h-5 w-5 mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+            <div>
+              <p className="text-sm font-medium">What happens next?</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                You&apos;ll receive a confirmation email shortly. Once your order ships,
+                we&apos;ll send you tracking information.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* checkoutComplete slot — purchase trackers, loyalty earn confirmation */}
+        <ClientPluginSlot
+          name="checkoutComplete"
+          context={{
+            orderId: orderId ?? undefined,
+            total: purchaseDetails?.value,
+            currency: purchaseDetails?.currency,
+            itemCount: purchaseDetails?.numItems,
+          }}
+        />
+
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <Link
+            href="/products"
+            className="inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity"
+          >
+            Continue Shopping
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/account/orders"
+            className="inline-flex items-center justify-center gap-2 border border-foreground px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:bg-foreground hover:text-background transition-colors"
+          >
+            My Orders
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container-custom py-section text-center">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      }
+    >
+      <OrderSuccessContent />
+    </Suspense>
+  )
+}
