@@ -32,16 +32,21 @@ export default async function CollectionPage({
 
   return (
     <>
-      <div className="border-b">
-        <div className="container-custom py-section-sm text-center">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">Collection</p>
-          <h1 className="text-h1 font-heading font-semibold">{collection.title}</h1>
-          {hasDescription && (
-            <p className="mt-3 text-muted-foreground max-w-xl mx-auto">{description as string}</p>
-          )}
+      <section className="bg-background py-section-sm lg:py-section">
+        <div className="container-custom">
+          <div className="max-w-3xl">
+            <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2.25rem,5vw,4rem)]">
+              {collection.title}
+            </h1>
+            {hasDescription && (
+              <p className="mt-4 text-base lg:text-lg text-foreground/60 max-w-xl leading-relaxed">
+                {description as string}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="container-custom py-8">
+      </section>
+      <div className="container-custom pb-section">
         {/* Filter enhancements, promo banners */}
         <PluginSlot
           name="collectionAboveGrid"

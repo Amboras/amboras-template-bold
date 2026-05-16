@@ -23,7 +23,7 @@ export default function ProductCard({ product, variantExtensions }: ProductCardP
     <Link href={`/products/${product.handle}`} className="group block" prefetch={true}>
       <div className="space-y-3">
         {/* Product Image */}
-        <div className="relative w-full h-[300px] rounded-md overflow-hidden bg-muted">
+        <div className="relative aspect-[314/219] rounded-md overflow-hidden bg-muted">
           <Image
             src={getProductImage(product.thumbnail, product.id)}
             alt={product.title}

@@ -18,29 +18,32 @@ export default function AuthError({
   }, [error])
 
   return (
-    <div className="container-custom py-16">
-      <div className="mx-auto max-w-md text-center">
-        <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" strokeWidth={1.5} />
-        <h2 className="text-xl font-heading font-semibold mb-2">Sign-in unavailable</h2>
-        <p className="text-sm text-muted-foreground mb-8">
-          We hit a snag while loading the sign-in form. Try again in a moment, or head back home
-          and retry.
-        </p>
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={reset}
-            className="inline-flex items-center gap-2 bg-foreground text-background px-6 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Try Again
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 border border-foreground/20 px-6 py-2.5 text-sm font-semibold hover:border-foreground/50 transition-colors"
-          >
-            <Home className="h-4 w-4" />
-            Homepage
-          </Link>
+    <div className="container-custom py-section">
+      <div className="mx-auto max-w-md">
+        <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12 text-center">
+          <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" strokeWidth={1.5} />
+          <h2 className="font-body font-bold tracking-tight text-balance leading-[1.1] text-[clamp(1.5rem,3vw,2rem)]">
+            Sign-in unavailable
+          </h2>
+          <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
+            We hit a snag while loading the sign-in form. Try again in a moment, or head back home and retry.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={reset}
+              className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Try again
+            </button>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border border-foreground/20 hover:border-foreground px-6 py-3 text-sm font-medium transition-colors"
+            >
+              <Home className="h-4 w-4" />
+              Homepage
+            </Link>
+          </div>
         </div>
       </div>
     </div>

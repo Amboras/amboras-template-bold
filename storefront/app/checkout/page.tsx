@@ -42,7 +42,7 @@ type InfoFormValues = {
   country_code: string
   province: string
 }
-        
+
 export default function CheckoutPage() {
   const router = useRouter()
   const {
@@ -169,10 +169,10 @@ export default function CheckoutPage() {
   }
 
   const inputCls = (hasError: boolean) =>
-    `w-full border-b bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:outline-none transition-colors ${
+    `w-full rounded-full bg-white/80 border px-5 py-3 text-sm placeholder:text-muted-foreground focus:outline-none transition-colors ${
       hasError
         ? 'border-destructive focus:border-destructive'
-        : 'border-foreground/20 focus:border-foreground'
+        : 'border-black/[0.06] focus:border-foreground/30'
     }`
 
   return (
@@ -184,14 +184,12 @@ export default function CheckoutPage() {
       />
 
       {/* Breadcrumbs */}
-      <div className="border-b">
-        <div className="container-custom py-3">
-          <nav className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">Checkout</span>
-          </nav>
-        </div>
+      <div className="container-custom pt-6">
+        <nav className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground">Checkout</span>
+        </nav>
       </div>
 
       <div className="container-custom py-8 lg:py-12">
@@ -206,13 +204,13 @@ export default function CheckoutPage() {
                 <button
                   onClick={() => { if (isCompleted) setStep('shipping') }}
                   disabled={!isCompleted}
-                  className={`text-sm transition-colors ${
-                    isActive ? 'font-semibold text-foreground' :
-                    isCompleted ? 'text-foreground cursor-pointer underline underline-offset-4' :
-                    'text-muted-foreground cursor-default'
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs uppercase tracking-[0.2em] font-medium transition-colors ${
+                    isActive ? 'bg-foreground text-background' :
+                    isCompleted ? 'bg-muted/40 text-foreground cursor-pointer hover:bg-muted/60' :
+                    'bg-muted/40 text-foreground/50 cursor-default'
                   }`}
                 >
-                  {isCompleted && <Check className="h-3.5 w-3.5 inline mr-1" />}
+                  {isCompleted && <Check className="h-3 w-3" />}
                   {s.label}
                 </button>
               </div>
@@ -224,7 +222,7 @@ export default function CheckoutPage() {
           {/* ============ LEFT COLUMN ============ */}
           <div>
             {error && (
-              <div role="alert" className="flex items-start gap-3 p-4 mb-6 border border-destructive/30 rounded-sm bg-destructive/5">
+              <div role="alert" className="flex items-start gap-3 p-4 mb-6 border border-destructive/30 rounded-md bg-destructive/5">
                 <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-destructive">{error}</p>
               </div>
@@ -233,10 +231,11 @@ export default function CheckoutPage() {
             {/* Step 1: Contact + Address + Shipping Method */}
             {step === 'shipping' && (
               <form onSubmit={handleShippingSubmit} className="space-y-8" noValidate>
-                <section>
-                  <h2 className="text-xs uppercase tracking-widest font-semibold mb-4">Contact</h2>
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Contact</h2>
 
                   <div>
+                    <label className="block text-xs text-muted-foreground mb-2">Email</label>
                     <input
                       type="email"
                       {...register('email', {
@@ -246,14 +245,14 @@ export default function CheckoutPage() {
                           message: 'Please enter a valid email address',
                         },
                       })}
-                      placeholder="Email address"
+                      placeholder="you@example.com"
                       autoComplete="email"
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? 'email-error' : undefined}
                       className={inputCls(!!errors.email)}
                     />
                     {errors.email && (
-                      <p id="email-error" role="alert" className="mt-1 text-xs text-destructive">{errors.email.message}</p>
+                      <p id="email-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.email.message}</p>
                     )}
                   </div>
 
@@ -266,12 +265,13 @@ export default function CheckoutPage() {
                   )}
                 </section>
 
-                <section>
-                  <h2 className="text-xs uppercase tracking-widest font-semibold mb-4">Shipping Address</h2>
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Shipping address</h2>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                     {/* First Name - conditionally required */}
                     {checkoutSettings?.full_name === 'full' && (
                       <div>
+                        <label className="block text-xs text-muted-foreground mb-2">First name</label>
                         <input
                           type="text"
                           {...register('first_name', {
@@ -287,13 +287,14 @@ export default function CheckoutPage() {
                           className={inputCls(!!errors.first_name)}
                         />
                         {errors.first_name && (
-                          <p id="first-name-error" role="alert" className="mt-1 text-xs text-destructive">{errors.first_name.message}</p>
+                          <p id="first-name-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.first_name.message}</p>
                         )}
                       </div>
                     )}
 
                     {/* Last Name - always required */}
                     <div className={checkoutSettings?.full_name === 'last_only' ? 'col-span-2' : ''}>
+                      <label className="block text-xs text-muted-foreground mb-2">Last name</label>
                       <input
                         type="text"
                         {...register('last_name', { required: 'Last name is required' })}
@@ -304,17 +305,18 @@ export default function CheckoutPage() {
                         className={inputCls(!!errors.last_name)}
                       />
                       {errors.last_name && (
-                        <p id="last-name-error" role="alert" className="mt-1 text-xs text-destructive">{errors.last_name.message}</p>
+                        <p id="last-name-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.last_name.message}</p>
                       )}
                     </div>
 
                     {/* Company Name - conditional visibility */}
                     {checkoutSettings?.company_name === 'optional' && (
                       <div className="col-span-2">
+                        <label className="block text-xs text-muted-foreground mb-2">Company (optional)</label>
                         <input
                           type="text"
                           {...register('company')}
-                          placeholder="Company (optional)"
+                          placeholder="Company"
                           autoComplete="organization"
                           className={inputCls(false)}
                         />
@@ -323,23 +325,27 @@ export default function CheckoutPage() {
 
                     {/* Address Line 1 - always required */}
                     <div className="col-span-2">
+                      <label className="block text-xs text-muted-foreground mb-2">Address</label>
                       <input
                         type="text"
                         {...register('address_1', { required: 'Address is required' })}
-                        placeholder="Address"
+                        placeholder="Street address"
                         autoComplete="address-line1"
                         aria-invalid={!!errors.address_1}
                         aria-describedby={errors.address_1 ? 'address-error' : undefined}
                         className={inputCls(!!errors.address_1)}
                       />
                       {errors.address_1 && (
-                        <p id="address-error" role="alert" className="mt-1 text-xs text-destructive">{errors.address_1.message}</p>
+                        <p id="address-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.address_1.message}</p>
                       )}
                     </div>
 
                     {/* Address Line 2 - conditional visibility and requirement */}
                     {checkoutSettings?.address_line_2 !== 'hidden' && (
                       <div className="col-span-2">
+                        <label className="block text-xs text-muted-foreground mb-2">
+                          {checkoutSettings?.address_line_2 === 'required' ? 'Apartment, suite, etc.' : 'Apartment, suite, etc. (optional)'}
+                        </label>
                         <input
                           type="text"
                           {...register('address_2', {
@@ -348,20 +354,21 @@ export default function CheckoutPage() {
                                 ? 'Apartment/suite is required'
                                 : true,
                           })}
-                          placeholder={checkoutSettings?.address_line_2 === 'required' ? 'Apartment, suite, etc.' : 'Apartment, suite, etc. (optional)'}
+                          placeholder="Apt, suite, unit"
                           autoComplete="address-line2"
                           aria-invalid={!!errors.address_2}
                           aria-describedby={errors.address_2 ? 'address2-error' : undefined}
                           className={inputCls(!!errors.address_2)}
                         />
                         {errors.address_2 && (
-                          <p id="address2-error" role="alert" className="mt-1 text-xs text-destructive">{errors.address_2.message}</p>
+                          <p id="address2-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.address_2.message}</p>
                         )}
                       </div>
                     )}
 
                     {/* City - always required */}
                     <div>
+                      <label className="block text-xs text-muted-foreground mb-2">City</label>
                       <input
                         type="text"
                         {...register('city', { required: 'City is required' })}
@@ -372,12 +379,13 @@ export default function CheckoutPage() {
                         className={inputCls(!!errors.city)}
                       />
                       {errors.city && (
-                        <p id="city-error" role="alert" className="mt-1 text-xs text-destructive">{errors.city.message}</p>
+                        <p id="city-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.city.message}</p>
                       )}
                     </div>
 
                     {/* Postal Code - always required */}
                     <div>
+                      <label className="block text-xs text-muted-foreground mb-2">Postal code</label>
                       <input
                         type="text"
                         {...register('postal_code', {
@@ -394,7 +402,7 @@ export default function CheckoutPage() {
                         className={inputCls(!!errors.postal_code)}
                       />
                       {errors.postal_code && (
-                        <p id="postal-error" role="alert" className="mt-1 text-xs text-destructive">{errors.postal_code.message}</p>
+                        <p id="postal-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.postal_code.message}</p>
                       )}
                     </div>
 
@@ -403,10 +411,11 @@ export default function CheckoutPage() {
                         for non-state-based countries like UK/DE/FR). Shippo
                         normalizes "California" → "CA" at fulfillment. */}
                     <div className="col-span-2">
+                      <label className="block text-xs text-muted-foreground mb-2">State / Province</label>
                       <input
                         type="text"
                         {...register('province')}
-                        placeholder="State / Province (e.g. CA)"
+                        placeholder="e.g. CA"
                         autoComplete="address-level1"
                         className={inputCls(false)}
                       />
@@ -414,6 +423,9 @@ export default function CheckoutPage() {
 
                     {/* Phone - conditional requirement */}
                     <div className="col-span-2">
+                      <label className="block text-xs text-muted-foreground mb-2">
+                        {checkoutSettings?.phone === 'required' ? 'Phone' : 'Phone (optional)'}
+                      </label>
                       <input
                         type="tel"
                         {...register('phone', {
@@ -427,14 +439,14 @@ export default function CheckoutPage() {
                             return true
                           },
                         })}
-                        placeholder={checkoutSettings?.phone === 'required' ? 'Phone' : 'Phone (optional)'}
+                        placeholder="Phone"
                         autoComplete="tel"
                         aria-invalid={!!errors.phone}
                         aria-describedby={errors.phone ? 'phone-error' : undefined}
                         className={inputCls(!!errors.phone)}
                       />
                       {errors.phone && (
-                        <p id="phone-error" role="alert" className="mt-1 text-xs text-destructive">{errors.phone.message}</p>
+                        <p id="phone-error" role="alert" className="mt-1.5 text-xs text-destructive">{errors.phone.message}</p>
                       )}
                     </div>
 
@@ -443,8 +455,8 @@ export default function CheckoutPage() {
                   </div>
                 </section>
 
-                <section>
-                  <h2 className="text-xs uppercase tracking-widest font-semibold mb-4">Shipping Method</h2>
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Shipping method</h2>
                   {loadingShipping ? (
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -460,8 +472,8 @@ export default function CheckoutPage() {
                         return (
                           <label
                             key={option.id}
-                            className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-colors ${
-                              selectedShipping === option.id ? 'border-foreground' : 'hover:border-foreground/50'
+                            className={`flex items-center justify-between p-4 rounded-md bg-white/80 border cursor-pointer transition-colors ${
+                              selectedShipping === option.id ? 'border-foreground' : 'border-black/[0.06] hover:border-foreground/30'
                             }`}
                           >
                             <div className="flex items-center gap-3">
@@ -491,10 +503,10 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isUpdating || !hasItems || Object.keys(errors).length > 0}
-                  className="w-full bg-foreground text-background py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
                 >
                   {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                  Continue to Payment
+                  Continue to payment
                 </button>
               </form>
             )}
@@ -502,7 +514,7 @@ export default function CheckoutPage() {
             {/* STEP 2: Payment */}
             {step === 'payment' && (
               <div className="space-y-6">
-                <div className="p-4 border rounded-sm bg-muted/30 text-sm space-y-2">
+                <div className="rounded-md bg-muted/40 p-5 sm:p-6 text-sm space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Contact</span>
                     <span>{watchedEmail}</span>
@@ -517,14 +529,14 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <section>
-                  <h2 className="text-xs uppercase tracking-widest font-semibold mb-4">Payment</h2>
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Payment</h2>
 
                   {(() => {
                     // Demo fallback (no real provider connected for this region)
                     if (!loadingProviders && availableProviders.length === 0) {
                       return (
-                        <div className="border rounded-sm p-6">
+                        <div className="rounded-md bg-white/80 border border-black/[0.06] p-6">
                           <p className="text-sm text-muted-foreground">
                             This is a demo store. Orders are placed using the system payment provider — no real payment is processed.
                           </p>
@@ -534,7 +546,7 @@ export default function CheckoutPage() {
 
                     if (!cart) {
                       return (
-                        <div className="border rounded-sm p-6 flex items-center justify-center">
+                        <div className="rounded-md bg-white/80 border border-black/[0.06] p-6 flex items-center justify-center">
                           <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                           <span className="ml-2 text-sm text-muted-foreground">Initializing payment...</span>
                         </div>
@@ -579,11 +591,11 @@ export default function CheckoutPage() {
 
                         {expressProviders.length > 0 && formProviders.length > 0 && (
                           <div className="flex items-center gap-3 my-2">
-                            <div className="flex-1 border-t border-border" />
-                            <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                            <div className="flex-1 border-t border-black/[0.08]" />
+                            <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
                               or pay with card
                             </span>
-                            <div className="flex-1 border-t border-border" />
+                            <div className="flex-1 border-t border-black/[0.08]" />
                           </div>
                         )}
 
@@ -597,15 +609,15 @@ export default function CheckoutPage() {
                   })()}
                 </section>
 
-                <div className="flex gap-3">
-                  <button type="button" onClick={() => setStep('shipping')} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button type="button" onClick={() => setStep('shipping')} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                     <ArrowLeft className="h-4 w-4" />
                     Back
                   </button>
                   {availableProviders.length === 0 && (
-                    <button onClick={handlePlaceOrder} disabled={isUpdating} className="flex-1 bg-foreground text-background py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2">
+                    <button onClick={handlePlaceOrder} disabled={isUpdating} className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50">
                       {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                      Place Order
+                      Place order
                     </button>
                   )}
                 </div>
@@ -617,20 +629,20 @@ export default function CheckoutPage() {
           <div>
             <div className="sticky top-24 space-y-6">
               {/* Order Summary */}
-              <div className="border rounded-sm p-6">
-                <h2 className="text-xs uppercase tracking-widest font-semibold mb-6">Order Summary</h2>
+              <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-8">
+                <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Order summary</h2>
                 {!hasItems ? (
                   <div className="text-center py-8">
                     <ShoppingBag className="mx-auto h-8 w-8 text-muted-foreground/40" strokeWidth={1.5} />
                     <p className="mt-3 text-sm text-muted-foreground">Your bag is empty</p>
-                    <Link href="/products" className="mt-3 inline-block text-sm font-semibold underline underline-offset-4">Continue Shopping</Link>
+                    <Link href="/products" className="mt-3 inline-block text-sm font-medium underline underline-offset-4">Continue shopping</Link>
                   </div>
                 ) : (
                   <>
                     <div className="space-y-4 mb-6">
                       {cart?.items?.map((item: CartLineItem) => (
                         <div key={item.id} className="flex gap-3">
-                          <div className="relative h-16 w-14 flex-shrink-0 overflow-hidden bg-muted rounded-sm">
+                          <div className="relative h-16 w-14 flex-shrink-0 overflow-hidden bg-muted rounded-md">
                             <Image src={getProductImage(item.thumbnail, item.product_id || item.id)} alt={item.title} fill className="object-cover" />
                             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[9px] font-bold text-background">{item.quantity}</span>
                           </div>
@@ -645,7 +657,7 @@ export default function CheckoutPage() {
                       ))}
                     </div>
 
-                    <div className="border-t pt-4">
+                    <div className="border-t border-black/[0.06] pt-4">
                       <PromoCodeInput
                         appliedPromoCodes={appliedPromoCodes}
                         discountTotal={discountTotal}
@@ -657,7 +669,7 @@ export default function CheckoutPage() {
                       />
                     </div>
 
-                    <div className="space-y-2 text-sm border-t pt-4">
+                    <div className="space-y-2 text-sm border-t border-black/[0.06] pt-4 mt-4">
                       {(() => {
                         const isTaxInclusive = cart?.items?.some((item: CartLineItem) => item.is_tax_inclusive)
                         const checkoutSubtotal = isTaxInclusive
@@ -692,9 +704,9 @@ export default function CheckoutPage() {
                           </>
                         )
                       })()}
-                      <div className="flex justify-between border-t pt-2 mt-2">
+                      <div className="flex justify-between border-t border-black/[0.06] pt-2 mt-2">
                         <span className="font-semibold">Total</span>
-                        <span className="font-heading text-lg font-semibold">{formatPrice(cart?.total || 0, currency)}</span>
+                        <span className="font-body text-lg font-bold">{formatPrice(cart?.total || 0, currency)}</span>
                       </div>
                     </div>
                   </>
@@ -712,7 +724,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Compliance Footer */}
-        <div className="mt-12 pt-8 border-t text-center">
+        <div className="mt-12 pt-8 border-t border-black/[0.06] text-center">
           <p className="text-xs text-muted-foreground">
             By completing your order, you agree to our{' '}
             <Link href="/terms" className="underline underline-offset-2 hover:text-foreground transition-colors">Terms of Service</Link>

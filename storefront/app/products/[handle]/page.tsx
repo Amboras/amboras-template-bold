@@ -110,23 +110,21 @@ export default async function ProductPage({
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="border-b">
-        <div className="container-custom py-3">
-          <nav className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="h-3 w-3" />
-            <Link href="/products" className="hover:text-foreground transition-colors">Shop</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">{product.title}</span>
-          </nav>
-        </div>
+      <div className="container-custom pt-6">
+        <nav className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+          <ChevronRight className="h-3 w-3" />
+          <Link href="/products" className="hover:text-foreground transition-colors">Shop</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground">{product.title}</span>
+        </nav>
       </div>
 
       <div className="container-custom py-8 lg:py-12">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Product Images */}
           <div className="space-y-3">
-            <div className="relative aspect-[3/4] overflow-hidden bg-muted rounded-sm">
+            <div className="relative aspect-[856/601] overflow-hidden bg-muted rounded-md">
               <Image
                 src={displayImages[0].url}
                 alt={product.title}
@@ -142,7 +140,7 @@ export default async function ProductPage({
                 {displayImages.slice(1, 5).map((image: any, idx: number) => (
                   <div
                     key={idx}
-                    className="relative aspect-[3/4] overflow-hidden bg-muted rounded-sm"
+                    className="relative aspect-[856/601] overflow-hidden bg-muted rounded-md"
                   >
                     <Image
                       src={image.url}
@@ -174,11 +172,13 @@ export default async function ProductPage({
             {/* Title & Subtitle */}
             <div>
               {product.subtitle && (
-                <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-2">
+                <p className="text-xs text-muted-foreground mb-2">
                   {product.subtitle}
                 </p>
               )}
-              <h1 className="text-h2 font-heading font-semibold">{product.title}</h1>
+              <h1 className="text-3xl lg:text-4xl font-body font-bold tracking-tight leading-[1.1] text-balance">
+                {product.title}
+              </h1>
               {/* Review stars, badges */}
               <PluginSlot
                 name="pdpAfterTitle"
@@ -202,18 +202,18 @@ export default async function ProductPage({
             <PluginSlot name="pdpBelowAddToCart" context={{ productId: product.id }} />
 
             {/* Trust Signals */}
-            <div className="grid grid-cols-3 gap-4 py-6 border-t">
-              <div className="text-center">
-                <Truck className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">Free Shipping</p>
+            <div className="grid grid-cols-3 gap-4 py-6 border-t border-black/[0.06]">
+              <div className="flex flex-col items-start gap-2">
+                <Truck className="h-5 w-5 text-foreground/70" strokeWidth={1.5} />
+                <p className="text-xs text-foreground/65">Free shipping</p>
               </div>
-              <div className="text-center">
-                <RotateCcw className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">30-Day Returns</p>
+              <div className="flex flex-col items-start gap-2">
+                <RotateCcw className="h-5 w-5 text-foreground/70" strokeWidth={1.5} />
+                <p className="text-xs text-foreground/65">30-day returns</p>
               </div>
-              <div className="text-center">
-                <Shield className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">Secure Checkout</p>
+              <div className="flex flex-col items-start gap-2">
+                <Shield className="h-5 w-5 text-foreground/70" strokeWidth={1.5} />
+                <p className="text-xs text-foreground/65">Secure checkout</p>
               </div>
             </div>
 

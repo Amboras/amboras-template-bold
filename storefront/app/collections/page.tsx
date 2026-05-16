@@ -19,37 +19,46 @@ export default async function CollectionsPage() {
 
   return (
     <>
-      <div className="border-b">
-        <div className="container-custom py-section-sm text-center">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">Browse</p>
-          <h1 className="text-h1 font-heading font-semibold">Collections</h1>
+      <section className="bg-background py-section-sm lg:py-section">
+        <div className="container-custom">
+          <div className="max-w-3xl">
+            <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2.25rem,5vw,4rem)]">
+              Collections
+            </h1>
+            <p className="mt-4 text-base lg:text-lg text-foreground/60 max-w-xl leading-relaxed">
+              Curated edits — handpicked pieces grouped around a single mood, season, or theme.
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container-custom py-section">
+      <div className="container-custom pb-section">
         {collections.length === 0 ? (
           <p className="text-center text-muted-foreground">No collections available yet.</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {collections.map((collection: any) => {
+            {collections.map((collection: any, idx: number) => {
               const description = typeof collection.metadata?.description === 'string'
                 ? collection.metadata.description
                 : null
+              const num = String(idx + 1).padStart(2, '0')
 
               return (
                 <Link
                   key={collection.id}
                   href={`/collections/${collection.handle}`}
-                  className="group block border rounded-sm p-8 hover:border-foreground transition-colors"
+                  className="group block rounded-md bg-muted/40 p-8 transition-all hover:-translate-y-0.5"
                 >
-                  <h2 className="text-h3 font-heading font-semibold group-hover:underline underline-offset-4">
+                  <p className="text-sm text-muted-foreground/70 font-medium tabular-nums">{num}</p>
+                  <h2 className="mt-4 text-2xl font-body font-bold tracking-tight leading-snug group-hover:underline underline-offset-4">
                     {collection.title}
                   </h2>
                   {description && (
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{description}</p>
+                    <p className="mt-2 text-[15px] text-foreground/60 leading-relaxed line-clamp-2">{description}</p>
                   )}
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium">
-                    Shop Now <ArrowRight className="h-4 w-4" />
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-foreground/70 group-hover:text-foreground transition-colors">
+                    Shop now
+                    <ArrowRight className="h-3.5 w-3.5 -rotate-45 transition-transform group-hover:rotate-0" strokeWidth={1.75} />
                   </span>
                 </Link>
               )

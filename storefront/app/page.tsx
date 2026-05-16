@@ -147,7 +147,7 @@ export default function HomePage() {
       {/* Editorial / Brand Story — cozy editorial luxury */}
       <section className="py-section">
         <div className="container-custom">
-          <div className="relative overflow-hidden rounded-lg bg-[#f7f3eb] p-6 sm:p-10 lg:p-16">
+          <div className="relative overflow-hidden rounded-lg bg-muted/40 p-6 sm:p-10 lg:p-16">
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Image — nested concentric radii (double-bezel) */}
               <div className="lg:col-span-6">

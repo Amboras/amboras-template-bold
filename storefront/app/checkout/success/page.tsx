@@ -125,59 +125,65 @@ function OrderSuccessContent() {
 
   return (
     <div className="container-custom py-section">
-      <div className="max-w-lg mx-auto text-center">
-        <CheckCircle className="h-16 w-16 mx-auto text-green-600" strokeWidth={1.5} />
+      <div className="max-w-lg mx-auto">
+        <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12 text-center">
+          <CheckCircle className="h-14 w-14 mx-auto text-green-600" strokeWidth={1.5} />
 
-        <h1 className="mt-6 text-h1 font-heading font-semibold">Thank You!</h1>
-        <p className="mt-3 text-muted-foreground">
-          Your order has been placed successfully.
-        </p>
+          <h1 className="mt-6 font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
+            Thank you!
+          </h1>
+          <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
+            Your order has been placed successfully.
+          </p>
 
-        {orderId && (
-          <div className="mt-6 p-4 border rounded-sm bg-muted/30">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Order ID</p>
-            <p className="mt-1 text-sm font-mono font-medium">{orderId}</p>
-          </div>
-        )}
+          {orderId && (
+            <div className="mt-6 rounded-md bg-white/80 border border-black/[0.06] p-4">
+              <p className="text-[11px] text-muted-foreground uppercase tracking-[0.2em]">Order ID</p>
+              <p className="mt-1 text-sm font-mono font-medium">{orderId}</p>
+            </div>
+          )}
 
-        <div className="mt-8 p-6 border rounded-sm text-left space-y-3">
-          <div className="flex items-start gap-3">
-            <Package className="h-5 w-5 mt-0.5 flex-shrink-0" strokeWidth={1.5} />
-            <div>
-              <p className="text-sm font-medium">What happens next?</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                You&apos;ll receive a confirmation email shortly. Once your order ships,
-                we&apos;ll send you tracking information.
-              </p>
+          <div className="mt-6 rounded-md bg-white/80 border border-black/[0.06] p-5 text-left">
+            <div className="flex items-start gap-3">
+              <Package className="h-5 w-5 mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+              <div>
+                <p className="text-sm font-medium">What happens next?</p>
+                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                  You&apos;ll receive a confirmation email shortly. Once your order ships,
+                  we&apos;ll send you tracking information.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* checkoutComplete slot — purchase trackers, loyalty earn confirmation */}
-        <ClientPluginSlot
-          name="checkoutComplete"
-          context={{
-            orderId: orderId ?? undefined,
-            total: purchaseDetails?.value,
-            currency: purchaseDetails?.currency,
-            itemCount: purchaseDetails?.numItems,
-          }}
-        />
+          {/* checkoutComplete slot — purchase trackers, loyalty earn confirmation */}
+          <ClientPluginSlot
+            name="checkoutComplete"
+            context={{
+              orderId: orderId ?? undefined,
+              total: purchaseDetails?.value,
+              currency: purchaseDetails?.currency,
+              itemCount: purchaseDetails?.numItems,
+            }}
+          />
 
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/products"
-            className="inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity"
-          >
-            Continue Shopping
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/account/orders"
-            className="inline-flex items-center justify-center gap-2 border border-foreground px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:bg-foreground hover:text-background transition-colors"
-          >
-            My Orders
-          </Link>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/products"
+              className="group inline-flex items-center justify-center gap-3 rounded-full bg-foreground text-background pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:pl-7 active:scale-[0.98]"
+            >
+              <span>Continue shopping</span>
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/15 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                <ArrowRight className="h-4 w-4 -rotate-45 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-0" strokeWidth={1.75} />
+              </span>
+            </Link>
+            <Link
+              href="/account/orders"
+              className="inline-flex items-center justify-center rounded-full border border-foreground/20 hover:border-foreground px-6 py-3 text-sm font-medium transition-colors"
+            >
+              My orders
+            </Link>
+          </div>
         </div>
       </div>
     </div>

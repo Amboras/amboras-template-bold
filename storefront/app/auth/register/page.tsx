@@ -40,99 +40,101 @@ export default function RegisterPage() {
 
   return (
     <div className="container-custom py-section">
-      <div className="max-w-sm mx-auto">
+      <div className="max-w-md mx-auto">
         {/* authSignup slot — social proof panel, benefits list */}
         <ClientPluginSlot name="authSignup" />
 
-        <div className="text-center mb-8">
-          <h1 className="text-h2 font-heading font-semibold">Create Account</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+        <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+          <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
+            Create account
+          </h1>
+          <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
             Join us to track orders and manage your profile
           </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">
+                  First name
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  autoComplete="given-name"
+                  className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                  placeholder="John"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">
+                  Last name
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  autoComplete="family-name"
+                  className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-muted-foreground mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs text-muted-foreground mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                minLength={8}
+                className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                placeholder="At least 8 characters"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isRegistering}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              {isRegistering ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create account'
+              )}
+            </button>
+          </form>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-                First Name
-              </label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-                autoComplete="given-name"
-                className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-                placeholder="John"
-              />
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-                Last Name
-              </label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-                autoComplete="family-name"
-                className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-                placeholder="Doe"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              placeholder="you@example.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="new-password"
-              minLength={8}
-              className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              placeholder="At least 8 characters"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isRegistering}
-            className="w-full bg-foreground text-background py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {isRegistering ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Creating account...
-              </>
-            ) : (
-              'Create Account'
-            )}
-          </button>
-        </form>
-
-        <p className="mt-8 text-center text-sm text-muted-foreground">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/auth/login" className="font-semibold text-foreground underline underline-offset-4">
+          <Link href="/auth/login" className="font-medium text-foreground underline underline-offset-4">
             Sign in
           </Link>
         </p>

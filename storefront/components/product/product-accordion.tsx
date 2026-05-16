@@ -20,54 +20,66 @@ function AccordionItem({
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="border-b last:border-0">
+    <div className="border-b border-black/[0.06] last:border-0">
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-4 text-left"
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between py-5 text-left transition-colors"
       >
-        <span className="text-sm font-medium">{title}</span>
+        <span className="text-lg font-body font-medium text-foreground">
+          {title}
+        </span>
         <ChevronDown
-          className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${
+          className={`h-4 w-4 text-foreground/60 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             isOpen ? 'rotate-180' : ''
           }`}
+          strokeWidth={1.75}
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-200 ${
-          isOpen ? 'max-h-96 pb-4' : 'max-h-0'
+        className={`grid transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          isOpen
+            ? 'grid-rows-[1fr] opacity-100 pb-5'
+            : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <div className="text-sm text-muted-foreground leading-relaxed">
-          {children}
+        <div className="overflow-hidden">
+          <div className="text-base text-foreground/65 leading-relaxed">
+            {children}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default function ProductAccordion({ description, details }: ProductAccordionProps) {
+export default function ProductAccordion({ description }: ProductAccordionProps) {
   return (
-    <div className="border-t">
+    <div className="border-t border-black/[0.06]">
       {description && (
-        <AccordionItem title="Description" defaultOpen>
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+        <AccordionItem title="Product Details" defaultOpen>
+          <div
+            className="prose prose-sm max-w-none prose-p:my-2 prose-p:text-foreground/65 prose-ul:my-3 prose-ul:pl-5 prose-li:my-1 prose-li:text-foreground/65 prose-a:text-foreground prose-strong:text-foreground"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
         </AccordionItem>
       )}
 
-      <AccordionItem title="Shipping & Returns">
+      <AccordionItem title="Size">
         <ul className="space-y-2">
-          <li>Free standard shipping on orders over $75</li>
-          <li>Express shipping available at checkout</li>
-          <li>Free returns within 30 days of delivery</li>
-          <li>Items must be unworn with original tags</li>
+          <li>Refer to the size guide for accurate measurements.</li>
+          <li>Each piece is true to size unless noted otherwise.</li>
+          <li>Contact support if you&apos;re between sizes.</li>
         </ul>
       </AccordionItem>
 
-      <AccordionItem title="Care Instructions">
+      <AccordionItem title="Shipping and Returns">
         <ul className="space-y-2">
-          <li>Please refer to the care label on the product</li>
-          <li>Store in a cool, dry place away from direct sunlight</li>
-          <li>Handle with care to maintain product quality</li>
+          <li>Free standard shipping on orders over $75.</li>
+          <li>Express shipping available at checkout.</li>
+          <li>Free returns within 30 days of delivery.</li>
+          <li>Items must be unworn with original tags.</li>
         </ul>
       </AccordionItem>
     </div>
