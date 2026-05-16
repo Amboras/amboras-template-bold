@@ -45,7 +45,7 @@ export default function RegisterPage() {
         <ClientPluginSlot name="authSignup" />
 
         <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
-          <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
+          <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,2.25rem)]">
             Create account
           </h1>
           <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
