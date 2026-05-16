@@ -121,38 +121,24 @@ export default async function ProductPage({
       </div>
 
       <div className="container-custom py-8 lg:py-12">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
-          {/* Product Images */}
-          <div className="space-y-3">
-            <div className="relative aspect-[856/601] overflow-hidden bg-muted rounded-md">
-              <Image
-                src={displayImages[0].url}
-                alt={product.title}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-
-            {displayImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
-                {displayImages.slice(1, 5).map((image: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="relative aspect-[856/601] overflow-hidden bg-muted rounded-md"
-                  >
-                    <Image
-                      src={image.url}
-                      alt={`${product.title} ${idx + 2}`}
-                      fill
-                      sizes="12vw"
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
+        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-8 lg:gap-12">
+          {/* Product Images — vertically stacked gallery */}
+          <div className="space-y-3 lg:space-y-4">
+            {displayImages.map((image: any, idx: number) => (
+              <div
+                key={idx}
+                className="relative aspect-[856/601] overflow-hidden bg-muted rounded-md"
+              >
+                <Image
+                  src={image.url}
+                  alt={idx === 0 ? product.title : `${product.title} — view ${idx + 1}`}
+                  fill
+                  priority={idx === 0}
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  className="object-cover"
+                />
               </div>
-            )}
+            ))}
           </div>
 
           {/* Product Info */}

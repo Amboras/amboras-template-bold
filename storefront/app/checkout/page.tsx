@@ -169,7 +169,7 @@ export default function CheckoutPage() {
   }
 
   const inputCls = (hasError: boolean) =>
-    `w-full rounded-full bg-white/80 border px-5 py-3 text-sm placeholder:text-muted-foreground focus:outline-none transition-colors ${
+    `w-full rounded-sm bg-white/80 border px-5 py-3 text-sm placeholder:text-muted-foreground focus:outline-none transition-colors ${
       hasError
         ? 'border-destructive focus:border-destructive'
         : 'border-black/[0.06] focus:border-foreground/30'
@@ -231,11 +231,11 @@ export default function CheckoutPage() {
             {/* Step 1: Contact + Address + Shipping Method */}
             {step === 'shipping' && (
               <form onSubmit={handleShippingSubmit} className="space-y-8" noValidate>
-                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6">
                   <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Contact</h2>
 
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-2">Email</label>
+                    <label className="block text-base text-muted-foreground mb-2">Email</label>
                     <input
                       type="email"
                       {...register('email', {
@@ -265,13 +265,13 @@ export default function CheckoutPage() {
                   )}
                 </section>
 
-                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6">
                   <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Shipping address</h2>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                     {/* First Name - conditionally required */}
                     {checkoutSettings?.full_name === 'full' && (
                       <div>
-                        <label className="block text-xs text-muted-foreground mb-2">First name</label>
+                        <label className="block text-base text-muted-foreground mb-2">First name</label>
                         <input
                           type="text"
                           {...register('first_name', {
@@ -294,7 +294,7 @@ export default function CheckoutPage() {
 
                     {/* Last Name - always required */}
                     <div className={checkoutSettings?.full_name === 'last_only' ? 'col-span-2' : ''}>
-                      <label className="block text-xs text-muted-foreground mb-2">Last name</label>
+                      <label className="block text-base text-muted-foreground mb-2">Last name</label>
                       <input
                         type="text"
                         {...register('last_name', { required: 'Last name is required' })}
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                     {/* Company Name - conditional visibility */}
                     {checkoutSettings?.company_name === 'optional' && (
                       <div className="col-span-2">
-                        <label className="block text-xs text-muted-foreground mb-2">Company (optional)</label>
+                        <label className="block text-base text-muted-foreground mb-2">Company (optional)</label>
                         <input
                           type="text"
                           {...register('company')}
@@ -325,7 +325,7 @@ export default function CheckoutPage() {
 
                     {/* Address Line 1 - always required */}
                     <div className="col-span-2">
-                      <label className="block text-xs text-muted-foreground mb-2">Address</label>
+                      <label className="block text-base text-muted-foreground mb-2">Address</label>
                       <input
                         type="text"
                         {...register('address_1', { required: 'Address is required' })}
@@ -343,7 +343,7 @@ export default function CheckoutPage() {
                     {/* Address Line 2 - conditional visibility and requirement */}
                     {checkoutSettings?.address_line_2 !== 'hidden' && (
                       <div className="col-span-2">
-                        <label className="block text-xs text-muted-foreground mb-2">
+                        <label className="block text-base text-muted-foreground mb-2">
                           {checkoutSettings?.address_line_2 === 'required' ? 'Apartment, suite, etc.' : 'Apartment, suite, etc. (optional)'}
                         </label>
                         <input
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
 
                     {/* City - always required */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-2">City</label>
+                      <label className="block text-base text-muted-foreground mb-2">City</label>
                       <input
                         type="text"
                         {...register('city', { required: 'City is required' })}
@@ -385,7 +385,7 @@ export default function CheckoutPage() {
 
                     {/* Postal Code - always required */}
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-2">Postal code</label>
+                      <label className="block text-base text-muted-foreground mb-2">Postal code</label>
                       <input
                         type="text"
                         {...register('postal_code', {
@@ -411,7 +411,7 @@ export default function CheckoutPage() {
                         for non-state-based countries like UK/DE/FR). Shippo
                         normalizes "California" → "CA" at fulfillment. */}
                     <div className="col-span-2">
-                      <label className="block text-xs text-muted-foreground mb-2">State / Province</label>
+                      <label className="block text-base text-muted-foreground mb-2">State / Province</label>
                       <input
                         type="text"
                         {...register('province')}
@@ -423,7 +423,7 @@ export default function CheckoutPage() {
 
                     {/* Phone - conditional requirement */}
                     <div className="col-span-2">
-                      <label className="block text-xs text-muted-foreground mb-2">
+                      <label className="block text-base text-muted-foreground mb-2">
                         {checkoutSettings?.phone === 'required' ? 'Phone' : 'Phone (optional)'}
                       </label>
                       <input
@@ -455,7 +455,7 @@ export default function CheckoutPage() {
                   </div>
                 </section>
 
-                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6">
                   <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Shipping method</h2>
                   {loadingShipping ? (
                     <div className="flex items-center justify-center py-8">
@@ -529,7 +529,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <section className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+                <section className="overflow-hidden rounded-md bg-muted/40 p-6">
                   <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-6">Payment</h2>
 
                   {(() => {

@@ -38,11 +38,11 @@ export default async function CollectionPage({
             <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2.25rem,5vw,4rem)]">
               {collection.title}
             </h1>
-            {hasDescription && (
-              <p className="mt-4 text-base lg:text-lg text-foreground/60 max-w-xl leading-relaxed">
-                {description as string}
-              </p>
-            )}
+            <p className="mt-4 text-base lg:text-lg text-foreground/60 max-w-xl leading-relaxed">
+              {hasDescription
+                ? (description as string)
+                : `Handpicked pieces from the ${collection.title} collection - quietly considered, made to last.`}
+            </p>
           </div>
         </div>
       </section>
@@ -52,7 +52,7 @@ export default async function CollectionPage({
           name="collectionAboveGrid"
           context={{ collectionId: collection.id, collectionTitle: collection.title }}
         />
-        <ProductGrid collectionId={collection.id} limit={100} />
+        <ProductGrid collectionId={collection.id} limit={100} columns={3} />
         {/* Load-more extensions, banners */}
         <PluginSlot name="collectionBelowGrid" context={{ collectionId: collection.id }} />
       </div>
