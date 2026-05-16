@@ -55,69 +55,73 @@ export default function ProfilePage() {
   return (
     <AccountLayout>
       <div>
-        <h1 className="text-h2 font-heading font-semibold mb-6">Profile</h1>
+        <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
+          Profile
+        </h1>
 
-        <form onSubmit={handleSubmit} className="max-w-md space-y-5">
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={customer?.email || ''}
-              disabled
-              className="w-full border-b border-foreground/10 bg-transparent px-0 py-3 text-sm text-muted-foreground cursor-not-allowed"
-            />
-            <p className="text-xs text-muted-foreground mt-1">Email cannot be changed</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        <div className="mt-8 max-w-xl overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-                First Name
+              <label className="block text-xs text-muted-foreground mb-2">
+                Email
               </label>
               <input
-                type="text"
-                value={form.first_name}
-                onChange={(e) => updateField('first_name', e.target.value)}
-                className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
+                type="email"
+                value={customer?.email || ''}
+                disabled
+                className="w-full rounded-full bg-muted/40 border border-black/[0.06] px-5 py-3 text-sm text-muted-foreground cursor-not-allowed"
               />
+              <p className="text-xs text-muted-foreground mt-1.5">Email cannot be changed</p>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">
+                  First name
+                </label>
+                <input
+                  type="text"
+                  value={form.first_name}
+                  onChange={(e) => updateField('first_name', e.target.value)}
+                  className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">
+                  Last name
+                </label>
+                <input
+                  type="text"
+                  value={form.last_name}
+                  onChange={(e) => updateField('last_name', e.target.value)}
+                  className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-                Last Name
+              <label className="block text-xs text-muted-foreground mb-2">
+                Phone
               </label>
               <input
-                type="text"
-                value={form.last_name}
-                onChange={(e) => updateField('last_name', e.target.value)}
-                className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
+                type="tel"
+                value={form.phone}
+                onChange={(e) => updateField('phone', e.target.value)}
+                placeholder="Optional"
+                className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              Phone
-            </label>
-            <input
-              type="tel"
-              value={form.phone}
-              onChange={(e) => updateField('phone', e.target.value)}
-              placeholder="Optional"
-              className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-foreground text-background px-8 py-3 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
-          >
-            {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-            Save Changes
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={saving}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              Save changes
+            </button>
+          </form>
+        </div>
       </div>
     </AccountLayout>
   )

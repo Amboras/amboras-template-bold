@@ -135,8 +135,8 @@ function OrderItemCard({ item, currencyCode }: { item: OrderItem; currencyCode: 
   }
 
   return (
-    <div className="flex gap-4 py-4 border-b last:border-0">
-      <Link href={`/products/${item.product_handle}`} className="relative w-20 h-20 flex-shrink-0 bg-muted rounded overflow-hidden">
+    <div className="flex gap-4 py-4 border-b border-black/[0.06] last:border-0">
+      <Link href={`/products/${item.product_handle}`} className="relative w-20 h-20 flex-shrink-0 bg-muted rounded-md overflow-hidden">
         <Image
           src={thumbnail}
           alt={item.title}
@@ -171,9 +171,9 @@ function AddressCard({ title, address, icon: Icon }: { title: string; address: O
   if (!address) return null
 
   return (
-    <div className="border rounded-sm p-4">
+    <div className="rounded-md bg-muted/40 p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-3">
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <Icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
         <h3 className="font-medium text-sm">{title}</h3>
       </div>
       <div className="text-sm space-y-1">
@@ -214,12 +214,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : error || !order ? (
-          <div className="border border-dashed rounded-sm p-12 text-center">
+          <div className="rounded-md border border-dashed border-black/[0.08] p-12 text-center">
             <Package className="h-8 w-8 mx-auto text-muted-foreground/40" strokeWidth={1.5} />
             <p className="mt-3 text-sm text-muted-foreground">Order not found</p>
             <Link
               href="/account/orders"
-              className="mt-4 inline-block text-sm font-semibold underline underline-offset-4"
+              className="mt-4 inline-block text-sm font-medium underline underline-offset-4"
             >
               View all orders
             </Link>
@@ -227,13 +227,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         ) : (
           <div className="space-y-6">
             {/* Order Header */}
-            <div className="border-b pb-6">
+            <div className="pb-6 border-b border-black/[0.06]">
               <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                 <div>
-                  <h1 className="text-h2 font-heading font-semibold">
+                  <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(1.875rem,3.6vw,2.75rem)]">
                     Order #{order.display_id}
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-muted-foreground mt-2">
                     Placed on {new Date(order.created_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -259,8 +259,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               {/* Left Column - Items */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Order Items */}
-                <div className="border rounded-sm p-5">
-                  <h2 className="font-medium mb-4">Order Items</h2>
+                <div className="rounded-md bg-muted/40 p-5 sm:p-6">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-4">Order items</h2>
                   <div>
                     {order.items.map((item) => (
                       <OrderItemCard
@@ -275,22 +275,22 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 {/* Shipping & Billing Addresses */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <AddressCard
-                    title="Shipping Address"
+                    title="Shipping address"
                     address={order.shipping_address}
                     icon={MapPin}
                   />
                   <AddressCard
-                    title="Billing Address"
+                    title="Billing address"
                     address={order.billing_address}
                     icon={CreditCard}
                   />
                 </div>
 
                 {/* Shipping & Tracking */}
-                <div className="border rounded-sm p-5">
+                <div className="rounded-md bg-muted/40 p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Truck className="h-4 w-4 text-muted-foreground" />
-                    <h3 className="font-medium text-sm">Shipping & Tracking</h3>
+                    <Truck className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+                    <h3 className="font-medium text-sm">Shipping & tracking</h3>
                   </div>
 
                   {/* Shipping Method */}
@@ -321,7 +321,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     <div className="space-y-4">
                       {order.fulfillments.map((fulfillment, idx) => (
                         <div key={fulfillment.id}>
-                          {idx > 0 && <div className="border-t my-4" />}
+                          {idx > 0 && <div className="border-t border-black/[0.06] my-4" />}
                           <TrackingInfo
                             fulfillment={fulfillment}
                           />
@@ -329,7 +329,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                       ))}
                     </div>
                   ) : (
-                    <div className="pt-4 border-t">
+                    <div className="pt-4 border-t border-black/[0.06]">
                       <p className="text-sm text-muted-foreground">
                         Tracking information will be available once your order ships
                       </p>
@@ -340,8 +340,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
               {/* Right Column - Order Summary */}
               <div className="lg:col-span-1">
-                <div className="border rounded-sm p-5 sticky top-24">
-                  <h2 className="font-medium mb-4">Order Summary</h2>
+                <div className="rounded-md bg-muted/40 p-5 sm:p-6 sticky top-24">
+                  <h2 className="text-2xl font-body font-bold tracking-tight leading-snug mb-4">Order summary</h2>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
@@ -367,7 +367,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                         <span>-{formatPrice(order.discount_total, order.currency_code)}</span>
                       </div>
                     )}
-                    <div className="border-t pt-2 flex justify-between font-semibold text-base">
+                    <div className="border-t border-black/[0.06] pt-2 mt-1 flex justify-between font-semibold text-base">
                       <span>Total</span>
                       <span>{formatPrice(order.total, order.currency_code)}</span>
                     </div>
@@ -375,8 +375,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
                   {/* Payment Info */}
                   {order.payment_collections && order.payment_collections.length > 0 && (
-                    <div className="mt-4 pt-4 border-t">
-                      <h3 className="text-sm font-medium mb-2">Payment Information</h3>
+                    <div className="mt-4 pt-4 border-t border-black/[0.06]">
+                      <h3 className="text-sm font-medium mb-2">Payment information</h3>
                       {order.payment_collections.map((payment) => (
                         <div key={payment.id} className="text-xs text-muted-foreground space-y-1">
                           <div className="flex justify-between">

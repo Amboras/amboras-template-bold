@@ -37,10 +37,10 @@ export default function ProductPrice({
   if (soldOut) {
     return (
       <div className="flex items-baseline gap-1.5">
-        <span className={`${isCard ? 'text-sm' : 'text-xl font-heading font-semibold'} text-muted-foreground/40 line-through`}>
+        <span className={`${isCard ? 'text-lg' : 'text-xl font-heading font-semibold'} text-muted-foreground/40 line-through`}>
           {formattedPrice}
         </span>
-        <span className={`${isCard ? 'text-xs' : 'text-sm'} font-semibold uppercase tracking-wide text-muted-foreground`}>
+        <span className={`${isCard ? 'text-sm' : 'text-base'} font-semibold uppercase tracking-wide text-muted-foreground`}>
           Sold Out
         </span>
       </div>
@@ -62,7 +62,7 @@ export default function ProductPrice({
 
   return (
     <div className="flex items-baseline">
-      <span className={`${isCard ? 'text-sm text-muted-foreground' : 'text-xl font-heading font-semibold'}`}>
+      <span className={`${isCard ? 'text-xl text-muted-foreground' : 'text-xl font-heading font-semibold'}`}>
         {formattedPrice}
       </span>
     </div>

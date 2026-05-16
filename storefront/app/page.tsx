@@ -20,54 +20,80 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-muted/30 overflow-hidden">
-        <div className="container-custom grid lg:grid-cols-2 gap-8 items-center py-section lg:py-32">
-          {/* Text Content */}
-          <div className="space-y-6 animate-fade-in-up">
-            <p
-              className="text-sm uppercase tracking-[0.2em] font-bold"
-              style={{ color: 'hsl(var(--accent))' }}
-            >
-              ✦ Bold Collection
-            </p>
-            <h1 className="text-display font-heading font-bold text-balance uppercase">
-              Designed To Stand Out.
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
-              High-contrast pieces for people who refuse to blend in. Shop the
-              loudest drop of the season.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: 'hsl(var(--accent))' }}
-                prefetch={true}
-              >
-                Shop the Drop
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 border-brand-primary border px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:bg-brand-primary hover:text-white transition-colors"
-                prefetch={true}
-              >
-                Our Story
-              </Link>
-            </div>
-          </div>
-
-          {/* Hero Image */}
-          <div className="relative aspect-[4/5] lg:aspect-[3/4] bg-muted rounded-sm overflow-hidden animate-fade-in">
+      {/* Hero — image-led editorial, single focal point */}
+      <section className="bg-background pt-4 pb-8 sm:pt-6 sm:pb-10 lg:pt-8 lg:pb-16">
+        <div className="container-custom">
+          <div
+            className="relative overflow-hidden rounded-md flex flex-col justify-between
+                       aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.1/1]
+                       w-full animate-fade-in"
+            // ↑ Removed all min-h-* — they fight aspect-ratio on narrow viewports
+            //   and cause the hero to overflow its column. Let aspect-ratio alone
+            //   drive the height; the container width naturally scales it.
+          >
+            {/* Background image */}
             <Image
               src={HERO_PLACEHOLDER}
               alt="Hero - New Collection"
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="100vw"
               className="object-cover"
               priority
             />
+      
+            {/* Bottom gradient */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none"
+            />
+      
+            {/* Content */}
+            <div className="relative z-10 flex flex-col justify-between h-full p-4 sm:p-6 lg:p-8 min-w-0">
+              {/* ↑ min-w-0 prevents flex children from blowing out the column */}
+              <div />
+      
+              {/* Bottom row */}
+              <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between sm:gap-6 animate-fade-in-up min-w-0">
+                {/* ↑ Changed sm:justify-between → md:justify-between to match the
+                      md:flex-row breakpoint; avoids justify-between on a column */}
+      
+                {/* CTA pair */}
+                <div className="flex flex-shrink-0 items-center gap-2">
+                  <Link
+                    href="/products"
+                    className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]"
+                    prefetch={true}
+                  >
+                    Shop now
+                  </Link>
+                  <Link
+                    href="/products"
+                    aria-label="Browse products"
+                    className="group inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5"
+                    prefetch={true}
+                    // ↑ Added shrink-0 so the icon circle never gets squeezed
+                  >
+                    <ArrowRight
+                      className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:-rotate-[15deg]"
+                      strokeWidth={2}
+                    />
+                  </Link>
+                </div>
+      
+                {/* Headline + subcopy */}
+                <div className="min-w-0 sm:max-w-md md:text-right text-white">
+                  {/* ↑ min-w-0 lets this flex child shrink below its content size */}
+                  <h1 className="font-heading font-semibold leading-[1.05] tracking-tight text-balance text-[clamp(1.1rem,3.5vw,3rem)]">
+                    {/* ↑ Tightened clamp ceiling (4rem → 3rem) and growth rate so
+                          the headline never runs off-screen at mid-range widths */}
+                    Designed to stand out
+                  </h1>
+                  <p className="mt-1.5 sm:mt-3 text-xs sm:text-base text-white/85 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                    High-contrast pieces for people who refuse to blend in — shop the loudest drop of the season.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -105,41 +131,94 @@ export default function HomePage() {
       {/* homeBelowFeatured slot — recently viewed, newsletter plugins */}
       <ClientPluginSlot name="homeBelowFeatured" />
 
-      {/* Editorial / Brand Story Section */}
-      <section className="py-section bg-muted/30">
+      {/* Feature triplet — numbered values grid */}
+      <section className="py-section border-y border-border/60">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="aspect-[4/5] bg-muted rounded-sm overflow-hidden relative">
-              <Image
-                src={LIFESTYLE_PLACEHOLDER}
-                alt="Lifestyle - Our Philosophy"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="space-y-6 lg:max-w-md">
-              <p
-                className="text-sm uppercase tracking-[0.2em] font-bold"
-                style={{ color: 'hsl(var(--accent))' }}
-              >
-                Why Bold
-              </p>
-              <h2 className="text-h2 font-heading font-bold uppercase">
-                Quiet Is Overrated
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Every product in our collection is chosen for its quality, design, and the story behind it.
-                We believe in fewer, better things — pieces that last and bring joy to everyday moments.
-              </p>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide link-underline pb-0.5"
-                prefetch={true}
-              >
-                Learn More
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 lg:gap-16">
+            {[
+              {
+                num: '01',
+                title: 'Deliver with quality',
+                body: 'Every product is crafted with care and attention to detail, ensuring the best for your customers.',
+              },
+              {
+                num: '02',
+                title: 'Designed to impress',
+                body: 'A sleek, modern store that enhances your brand and creates a memorable shopping experience.',
+              },
+              {
+                num: '03',
+                title: 'Curated for you',
+                body: 'Handpicked selections that reflect the latest trends and timeless essentials.',
+              },
+            ].map((item) => (
+              <div key={item.num} className="space-y-4">
+                <p className="text-sm text-muted-foreground/70 font-medium tabular-nums">
+                  {item.num}
+                </p>
+                <h3 className="text-2xl font-body font-bold tracking-tight leading-snug">
+                  {item.title}
+                </h3>
+                <p className="text-[15px] text-muted-foreground leading-relaxed max-w-xs">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Editorial / Brand Story — cozy editorial luxury */}
+      <section className="py-section">
+        <div className="container-custom">
+          <div className="relative overflow-hidden rounded-lg bg-muted/40 p-6 sm:p-10 lg:p-16">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Image — nested concentric radii (double-bezel) */}
+              <div className="lg:col-span-6">
+                <div className="relative overflow-hidden rounded-md aspect-[4/5] bg-muted shadow-[0_24px_60px_-30px_rgba(70,50,30,0.22)]">
+                  <Image
+                    src={LIFESTYLE_PLACEHOLDER}
+                    alt="Lifestyle - Our Philosophy"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]"
+                  />
+                </div>
+              </div>
+
+              {/* Text */}
+              <div className="lg:col-span-6 space-y-6 lg:pl-4 xl:pl-10">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-black/[0.06] px-3.5 py-1.5 text-[11px] uppercase tracking-[0.2em] font-medium text-foreground/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                  Our philosophy
+                </span>
+
+                <h2 className="font-heading font-semibold leading-[1.05] tracking-tight text-balance text-[clamp(2rem,4vw,3.25rem)]">
+                  Quiet is overrated.
+                  <br />
+                  <span className="text-foreground/55">Comfort wins.</span>
+                </h2>
+
+                <p className="text-base lg:text-[17px] text-foreground/65 leading-relaxed max-w-md">
+                  Every piece is chosen for its quality, design, and the story behind it. We believe in fewer, better things — pieces that last and bring joy to everyday moments.
+                </p>
+
+                <div className="pt-2">
+                  <Link
+                    href="/about"
+                    className="group inline-flex items-center gap-3 rounded-full bg-foreground text-background pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:pl-7 active:scale-[0.98]"
+                    prefetch={true}
+                  >
+                    <span>Read our story</span>
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/15 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                      <ArrowRight
+                        className="h-4 w-4 -rotate-45 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-0"
+                        strokeWidth={1.75}
+                      />
+                    </span>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -152,28 +231,53 @@ export default function HomePage() {
         </div>
       </section> */}
 
-      {/* Newsletter */}
+      {/* Newsletter — cozy cream panel, form left, image right */}
       <section className="py-section">
-        <div className="container-custom max-w-xl text-center">
-          <h2 className="text-h2 font-heading font-semibold">Stay in Touch</h2>
-          <p className="mt-3 text-muted-foreground">
-            Be the first to know about new arrivals, exclusive offers, and more.
-          </p>
-          <form className="mt-8 flex gap-2" onSubmit={handleNewsletterSubmit}>
-            <input
-              type="email"
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 border-b border-foreground/30 bg-transparent px-1 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-            />
-            <button
-              type="submit"
-              className="bg-foreground text-background px-6 py-3 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity whitespace-nowrap"
-            >
-              Subscribe
-            </button>
-          </form>
+        <div className="container-custom">
+          <div className="overflow-hidden rounded-md bg-foreground p-6 sm:p-10 lg:p-14">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Text + form */}
+              <div className="lg:col-span-6 space-y-6 lg:pr-6">
+                <h2 className="font-body font-bold tracking-tight text-background text-balance leading-[1.08] text-[clamp(1.875rem,3.6vw,2.75rem)]">
+                  Stay ahead with exclusive deals!
+                </h2>
+                <p className="text-[15px] text-background/60 leading-relaxed max-w-md">
+                  Be the first to know about special offers. Join our newsletter and get exclusive perks delivered straight to your inbox!
+                </p>
+                <form
+                  className="flex flex-wrap items-center gap-3 pt-2"
+                  onSubmit={handleNewsletterSubmit}
+                >
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="flex-1 min-w-[220px] rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="border border-background/90 hover:border-background rounded-full text-lg font-medium px-4 py-2 text-background hover:opacity-70 transition-opacity"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+
+              {/* Image right */}
+              <div className="lg:col-span-6">
+                <div className="relative overflow-hidden rounded-md w-full h-[377px] bg-muted shadow-[0_20px_50px_-25px_rgba(70,50,30,0.2)]">
+                  <Image
+                    src="/media/placeholders/email.avif"
+                    alt="Stay ahead with exclusive deals"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>

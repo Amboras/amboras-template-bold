@@ -63,7 +63,7 @@ export default function AddToCart({ variant }: AddToCartProps) {
       {/* Quantity + Add to Cart */}
       <div className="flex gap-3">
         {/* Quantity Selector */}
-        <div className="flex items-center border">
+        <div className="flex items-center border rounded-full">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="p-3 hover:bg-muted transition-colors"
@@ -87,7 +87,7 @@ export default function AddToCart({ variant }: AddToCartProps) {
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock || isAddingItem}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold uppercase tracking-wide transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold rounded-full uppercase tracking-wide transition-all ${
             isOutOfStock
               ? 'bg-muted text-muted-foreground cursor-not-allowed'
               : justAdded

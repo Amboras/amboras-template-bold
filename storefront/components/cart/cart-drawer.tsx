@@ -171,7 +171,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                       <div className="mt-auto pt-2 flex items-center justify-between">
                         {/* Quantity Selector */}
-                        <div className="flex items-center border rounded-md">
+                        <div className="flex items-center border rounded-full">
                           <button
                             onClick={() => updateItem({ lineId: item.id, quantity: Math.max(1, item.quantity - 1) })}
                             className="p-2.5 hover:bg-muted transition-colors"

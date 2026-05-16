@@ -23,16 +23,16 @@ export default function ProductCard({ product, variantExtensions }: ProductCardP
     <Link href={`/products/${product.handle}`} className="group block" prefetch={true}>
       <div className="space-y-3">
         {/* Product Image */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-muted rounded-sm">
+        <div className="relative aspect-[314/219] rounded-md overflow-hidden bg-muted">
           <Image
             src={getProductImage(product.thumbnail, product.id)}
             alt={product.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={`object-cover transition-transform duration-500 ease-out group-hover:scale-105 ${soldOut ? 'opacity-50' : ''}`}
           />
           {soldOut && (
-            <div className="absolute top-2 left-2 bg-muted-foreground/80 text-white text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-sm">
+            <div className="absolute top-2 left-2 bg-muted-foreground/80 text-white text-xs font-semibold uppercase tracking-wide px-2.5 py-1">
               Sold Out
             </div>
           )}
@@ -40,7 +40,7 @@ export default function ProductCard({ product, variantExtensions }: ProductCardP
 
         {/* Product Info */}
         <div className="space-y-1">
-          <h3 className={`text-sm font-medium line-clamp-1 group-hover:underline underline-offset-4 transition-all ${soldOut ? 'text-muted-foreground' : ''}`}>
+          <h3 className={`text-xl font-medium line-clamp-1 group-hover:underline underline-offset-4 transition-all ${soldOut ? 'text-muted-foreground' : ''}`}>
             {product.title}
           </h3>
           <ProductPrice

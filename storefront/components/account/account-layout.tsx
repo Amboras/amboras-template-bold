@@ -36,23 +36,18 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 
   return (
     <>
-      <div className="border-b">
-        <div className="container-custom py-3">
-          <nav className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">Account</span>
-          </nav>
-        </div>
+      <div className="container-custom pt-6">
+        <nav className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground">Account</span>
+        </nav>
       </div>
 
       <div className="container-custom py-8 lg:py-12">
-        <div className="grid lg:grid-cols-[200px_1fr] gap-10 lg:gap-16">
+        <div className="grid lg:grid-cols-[220px_1fr] gap-10 lg:gap-16">
           {/* Sidebar */}
           <aside className="space-y-1">
-            <p className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-4">
-              Account
-            </p>
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
@@ -60,7 +55,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                   key={item.href}
                   href={item.href}
                   className={`flex items-center gap-2.5 py-2 text-sm transition-colors ${
-                    isActive ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+                    isActive ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'
                   }`}
                 >
                   <item.icon className="h-4 w-4" strokeWidth={1.5} />
@@ -71,10 +66,10 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             <button
               onClick={() => logout()}
               disabled={isLoggingOut}
-              className="flex items-center gap-2.5 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors mt-4 pt-4 border-t w-full"
+              className="flex items-center gap-2.5 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors mt-4 pt-4 border-t border-black/[0.06] w-full"
             >
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
-              {isLoggingOut ? 'Signing out...' : 'Sign Out'}
+              {isLoggingOut ? 'Signing out...' : 'Sign out'}
             </button>
           </aside>
 

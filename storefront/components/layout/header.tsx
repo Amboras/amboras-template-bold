@@ -6,7 +6,17 @@ import { Search, ShoppingBag, User, Menu, X, LogIn } from 'lucide-react'
 import { useCart } from '@/hooks/use-cart'
 import { useAuth } from '@/hooks/use-auth'
 import CartDrawer from '@/components/cart/cart-drawer'
-import { useCollections } from '@/hooks/use-collections'
+
+const PRIMARY_LINKS = [
+  { label: 'Shop', href: '/products' },
+  { label: 'Collections', href: '/collections' },
+  { label: 'About', href: '/about' },
+] as const
+
+const SECONDARY_LINKS = [
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Shipping', href: '/shipping' },
+] as const
 
 export default function Header() {
   const { itemCount } = useCart()
@@ -14,7 +24,6 @@ export default function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const { data: collections } = useCollections()
 
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const mobileMenuCloseRef = useRef<HTMLButtonElement>(null)
@@ -25,14 +34,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Focus close button when mobile menu opens
   useEffect(() => {
     if (isMobileMenuOpen) {
       mobileMenuCloseRef.current?.focus()
     }
   }, [isMobileMenuOpen])
 
-  // Close mobile menu on Escape
   useEffect(() => {
     if (!isMobileMenuOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,7 +49,6 @@ export default function Header() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isMobileMenuOpen])
 
-  // Focus trap for mobile menu
   const handleMobileMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== 'Tab' || !mobileMenuRef.current) return
     const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
@@ -60,77 +66,100 @@ export default function Header() {
     }
   }, [])
 
+  const iconButton =
+    'inline-flex h-9 w-9 lg:h-10 lg:w-10 items-center justify-center rounded-full border border-foreground/15 text-foreground/85 hover:border-foreground/45 hover:text-foreground transition-colors duration-300'
+
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        className={`sticky top-0 z-40 w-full transition-colors duration-300 ${
           isScrolled
-            ? 'bg-background/95 backdrop-blur-md border-b shadow-sm'
-            : 'bg-background border-b'
+            ? 'bg-background/85 backdrop-blur-md border-b border-black/[0.04]'
+            : 'bg-background'
         }`}
       >
         <div className="container-custom">
-          <div className="flex h-16 items-center justify-between gap-4">
-            {/* Mobile menu toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 lg:hidden hover:opacity-70 transition-opacity"
-              aria-label="Open menu"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
+          <div className="relative flex h-16 lg:h-20 items-center justify-between gap-3">
+            {/* LEFT — mobile menu + desktop primary nav */}
+            <div className="flex items-center gap-1 lg:gap-7">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden inline-flex h-9 w-9 items-center justify-center -ml-2 hover:opacity-60 transition-opacity"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" strokeWidth={1.6} />
+              </button>
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-heading text-2xl font-semibold tracking-tight">
+              <nav className="hidden lg:flex items-center gap-7">
+                {PRIMARY_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-sm font-medium text-foreground/75 hover:text-foreground transition-colors duration-200"
+                    prefetch={true}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* CENTER — wordmark logo (absolutely centered) */}
+            <Link
+              href="/"
+              className="absolute left-1/2 -translate-x-1/2 flex items-center"
+              prefetch={true}
+              aria-label="Store — home"
+            >
+              <span className="font-body font-bold uppercase tracking-[0.18em] text-[15px] lg:text-lg leading-none">
                 Store
               </span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/products" className="text-sm tracking-wide uppercase link-underline py-1" prefetch={true}>
-                Shop All
+            {/* RIGHT — Contact link + round icon buttons */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Link
+                href="/contact"
+                className="hidden md:inline-block text-sm font-medium text-foreground/75 hover:text-foreground transition-colors duration-200 px-2 mr-1"
+                prefetch={true}
+              >
+                Contact
               </Link>
-              {collections?.slice(0, 4).map((collection: any) => (
-                <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
-                  className="text-sm tracking-wide uppercase link-underline py-1"
-                  prefetch={true}
-                >
-                  {collection.title}
-                </Link>
-              ))}
-            </nav>
 
-            {/* Actions */}
-            <div className="flex items-center gap-1">
               <Link
                 href="/search"
-                className="p-2.5 hover:opacity-70 transition-opacity"
+                className={`${iconButton} hidden sm:inline-flex`}
                 aria-label="Search"
+                prefetch={true}
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-[15px] w-[15px]" strokeWidth={1.6} />
               </Link>
+
               <Link
                 href={isLoggedIn ? '/account' : '/auth/login'}
-                className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block"
+                className={`${iconButton} hidden sm:inline-flex`}
                 aria-label={isLoggedIn ? 'Account' : 'Sign in'}
+                prefetch={true}
               >
-                {isLoggedIn ? <User className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
+                {isLoggedIn ? (
+                  <User className="h-[15px] w-[15px]" strokeWidth={1.6} />
+                ) : (
+                  <LogIn className="h-[15px] w-[15px]" strokeWidth={1.6} />
+                )}
               </Link>
+
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 hover:opacity-70 transition-opacity"
-                aria-label="Shopping bag"
+                className={`${iconButton} relative`}
+                aria-label={`Shopping bag — ${itemCount} item${itemCount === 1 ? '' : 's'}`}
               >
-                <ShoppingBag className="h-5 w-5" />
-                {itemCount > 0 && (
-                  <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold text-background">
-                    {itemCount}
-                  </span>
-                )}
+                <ShoppingBag className="h-[15px] w-[15px]" strokeWidth={1.6} />
+                <span
+                  aria-hidden
+                  className="absolute -top-0.5 -right-0.5 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-foreground text-[10px] font-semibold leading-none text-background tabular-nums ring-2 ring-background"
+                >
+                  {itemCount}
+                </span>
               </button>
             </div>
           </div>
@@ -141,7 +170,7 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div
@@ -150,53 +179,70 @@ export default function Header() {
             aria-modal="true"
             aria-label="Navigation menu"
             onKeyDown={handleMobileMenuKeyDown}
-            className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-background animate-slide-in-right"
+            className="absolute inset-y-0 left-0 w-[88vw] max-w-sm bg-background animate-slide-in-left flex flex-col shadow-[0_24px_60px_-30px_rgba(0,0,0,0.25)]"
           >
-            <div className="flex items-center justify-between p-4 border-b">
-              <span className="font-heading text-xl font-semibold">Menu</span>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.06]">
+              <Link
+                href="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-body font-bold uppercase tracking-[0.18em] text-[15px] leading-none"
+              >
+                Store
+              </Link>
               <button
                 ref={mobileMenuCloseRef}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 hover:opacity-70"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-foreground/15 hover:border-foreground/45 transition-colors duration-300"
                 aria-label="Close menu"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" strokeWidth={1.6} />
               </button>
             </div>
-            <nav className="p-4 space-y-1">
-              <Link
-                href="/products"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 text-lg tracking-wide border-b border-border/50"
-                prefetch={true}
-              >
-                Shop All
-              </Link>
-              {collections?.map((collection: any) => (
+
+            <nav className="flex-1 px-5 py-6 space-y-1 overflow-y-auto">
+              {PRIMARY_LINKS.map((link) => (
                 <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
+                  key={link.href}
+                  href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-lg tracking-wide border-b border-border/50"
+                  className="block py-3 font-body font-bold tracking-tight text-2xl leading-tight hover:text-foreground/60 transition-colors duration-200"
                   prefetch={true}
                 >
-                  {collection.title}
+                  {link.label}
                 </Link>
               ))}
-              <div className="pt-4 space-y-1">
+
+              <div className="pt-5 mt-5 border-t border-black/[0.06] space-y-1">
                 <Link
-                  href={isLoggedIn ? '/account' : '/auth/login'}
+                  href="/contact"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-2.5 text-[15px] text-foreground/75 hover:text-foreground transition-colors"
                 >
-                  {isLoggedIn ? 'Account' : 'Sign In'}
+                  Contact
                 </Link>
+                {SECONDARY_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2.5 text-[15px] text-foreground/75 hover:text-foreground transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
                 <Link
                   href="/search"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-2.5 text-[15px] text-foreground/75 hover:text-foreground transition-colors"
                 >
                   Search
+                </Link>
+                <Link
+                  href={isLoggedIn ? '/account' : '/auth/login'}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2.5 text-[15px] text-foreground/75 hover:text-foreground transition-colors"
+                >
+                  {isLoggedIn ? 'Account' : 'Sign in'}
                 </Link>
               </div>
             </nav>

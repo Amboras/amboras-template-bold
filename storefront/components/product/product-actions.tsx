@@ -187,7 +187,7 @@ export default function ProductActions({ product, variantExtensions }: ProductAc
                     key={value}
                     onClick={() => handleOptionChange(optionId, value)}
                     disabled={!isAvailable}
-                    className={`min-w-[48px] px-4 py-2.5 text-sm border transition-all ${
+                    className={`min-w-[48px] px-4 py-2.5 text-sm border transition-all rounded-full ${
                       isSelected
                         ? 'border-foreground bg-foreground text-background'
                         : isAvailable
@@ -213,7 +213,7 @@ export default function ProductActions({ product, variantExtensions }: ProductAc
 
       {/* Quantity + Add to Cart */}
       <div className="flex gap-3">
-        <div className="flex items-center border">
+        <div className="flex items-center border rounded-full">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="p-3 hover:bg-muted transition-colors"
@@ -236,7 +236,7 @@ export default function ProductActions({ product, variantExtensions }: ProductAc
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock || isAddingItem}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold uppercase tracking-wide transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-semibold uppercase tracking-wide transition-all ${
             isOutOfStock
               ? 'bg-muted text-muted-foreground cursor-not-allowed'
               : justAdded

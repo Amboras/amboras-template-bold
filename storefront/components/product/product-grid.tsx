@@ -11,15 +11,21 @@ interface ProductGridProps {
   categoryId?: string
   sortBy?: string
   query?: string
+  columns?: 3 | 4
+}
+
+const COLUMN_CLASSES: Record<3 | 4, string> = {
+  3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 }
 
 function ProductSkeleton() {
   return (
     <div className="space-y-3 animate-pulse">
-      <div className="aspect-[3/4] bg-muted rounded-sm" />
+      <div className="aspect-[4/5] bg-muted" />
       <div className="space-y-2">
-        <div className="h-3.5 bg-muted rounded w-3/4" />
-        <div className="h-3 bg-muted rounded w-1/3" />
+        <div className="h-3.5 bg-muted w-3/4" />
+        <div className="h-3 bg-muted w-1/3" />
       </div>
     </div>
   )
@@ -31,7 +37,9 @@ export default function ProductGrid({
   categoryId,
   sortBy = 'newest',
   query,
+  columns = 4,
 }: ProductGridProps) {
+  const gridCols = COLUMN_CLASSES[columns]
   const { data: rawProducts, isLoading, error } = useProducts({
     limit,
     collection_id: collectionId,
@@ -101,7 +109,7 @@ export default function ProductGrid({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
+      <div className={`grid gap-x-5 gap-y-10 ${gridCols}`}>
         {Array.from({ length: limit }).map((_, i) => (
           <ProductSkeleton key={i} />
         ))}
@@ -136,7 +144,7 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
+    <div className={`grid gap-x-5 gap-y-10 ${gridCols}`}>
       {products.map((product: any) => (
         <ProductCard key={product.id} product={product} variantExtensions={variantExtensions} />
       ))}

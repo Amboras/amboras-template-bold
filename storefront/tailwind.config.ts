@@ -42,7 +42,7 @@ const config: Config = {
         'h4': ['1.25rem', { lineHeight: '1.4' }],
       },
       maxWidth: {
-        'content': '1280px',
+        'content': '1600px',
       },
       spacing: {
         'section': '6rem',
@@ -65,12 +65,22 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        'slide-in-left': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        'slide-out-left': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.5s ease-out',
         'fade-in-up': 'fade-in-up 0.6s ease-out',
         'slide-in-right': 'slide-in-right 0.3s ease-out',
         'slide-out-right': 'slide-out-right 0.3s ease-out',
+        'slide-in-left': 'slide-in-left 0.35s cubic-bezier(0.32,0.72,0,1)',
+        'slide-out-left': 'slide-out-left 0.3s cubic-bezier(0.32,0.72,0,1)',
       },
     },
   },

@@ -21,18 +21,22 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="container-custom py-section">
-        <div className="max-w-sm mx-auto text-center">
-          <AlertCircle className="h-10 w-10 mx-auto mb-4 text-muted-foreground" strokeWidth={1.5} />
-          <h1 className="text-h2 font-heading font-semibold">Invalid Reset Link</h1>
-          <p className="mt-3 text-sm text-muted-foreground">
-            This password reset link is invalid or has expired. Please request a new one.
-          </p>
-          <Link
-            href="/auth/forgot-password"
-            className="mt-6 inline-block text-sm font-semibold underline underline-offset-4"
-          >
-            Request new reset link
-          </Link>
+        <div className="max-w-md mx-auto">
+          <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12 text-center">
+            <AlertCircle className="h-10 w-10 mx-auto mb-4 text-muted-foreground" strokeWidth={1.5} />
+            <h1 className="font-body font-bold tracking-tight text-balance leading-[1.1] text-[clamp(1.75rem,3.4vw,2.5rem)]">
+              Invalid reset link
+            </h1>
+            <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
+              This password reset link is invalid or has expired. Please request a new one.
+            </p>
+            <Link
+              href="/auth/forgot-password"
+              className="mt-6 inline-block text-sm font-medium underline underline-offset-4"
+            >
+              Request new reset link
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -41,18 +45,22 @@ function ResetPasswordForm() {
   if (success) {
     return (
       <div className="container-custom py-section">
-        <div className="max-w-sm mx-auto text-center">
-          <CheckCircle2 className="h-10 w-10 mx-auto mb-4 text-green-600" strokeWidth={1.5} />
-          <h1 className="text-h2 font-heading font-semibold">Password Updated</h1>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Your password has been reset successfully. You can now sign in with your new password.
-          </p>
-          <button
-            onClick={() => router.push(`/auth/login${email ? `?email=${encodeURIComponent(email)}` : ''}`)}
-            className="mt-6 bg-foreground text-background px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity"
-          >
-            Sign In
-          </button>
+        <div className="max-w-md mx-auto">
+          <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12 text-center">
+            <CheckCircle2 className="h-10 w-10 mx-auto mb-4 text-green-600" strokeWidth={1.5} />
+            <h1 className="font-body font-bold tracking-tight text-balance leading-[1.1] text-[clamp(1.75rem,3.4vw,2.5rem)]">
+              Password updated
+            </h1>
+            <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
+              Your password has been reset successfully. You can now sign in with your new password.
+            </p>
+            <button
+              onClick={() => router.push(`/auth/login${email ? `?email=${encodeURIComponent(email)}` : ''}`)}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all"
+            >
+              Sign in
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -89,65 +97,67 @@ function ResetPasswordForm() {
 
   return (
     <div className="container-custom py-section">
-      <div className="max-w-sm mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-h2 font-heading font-semibold">New Password</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+      <div className="max-w-md mx-auto">
+        <div className="overflow-hidden rounded-md bg-muted/40 p-6 sm:p-10 lg:p-12">
+          <h1 className="font-body font-bold tracking-tight text-balance leading-[1.05] text-[clamp(2rem,4vw,2.25rem)]">
+            New password
+          </h1>
+          <p className="mt-3 text-[15px] text-foreground/65 leading-relaxed">
             Choose a new password for your account
           </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <div>
+              <label className="block text-xs text-muted-foreground mb-2">
+                New password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                autoComplete="new-password"
+                autoFocus
+                className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                placeholder="At least 8 characters"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs text-muted-foreground mb-2">
+                Confirm password
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className="w-full rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                placeholder="Re-enter your password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-7 py-3 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Resetting...
+                </>
+              ) : (
+                'Reset password'
+              )}
+            </button>
+          </form>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              New Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete="new-password"
-              autoFocus
-              className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              placeholder="At least 8 characters"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs uppercase tracking-widest font-semibold mb-2">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete="new-password"
-              className="w-full border-b border-foreground/20 bg-transparent px-0 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              placeholder="Re-enter your password"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-foreground text-background py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Resetting...
-              </>
-            ) : (
-              'Reset Password'
-            )}
-          </button>
-        </form>
-
-        <p className="mt-8 text-center">
+        <p className="mt-6 text-center">
           <Link
             href="/auth/login"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
