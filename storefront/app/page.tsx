@@ -207,28 +207,53 @@ export default function HomePage() {
         </div>
       </section> */}
 
-      {/* Newsletter */}
+      {/* Newsletter — cozy cream panel, form left, image right */}
       <section className="py-section">
-        <div className="container-custom max-w-xl text-center">
-          <h2 className="text-h2 font-heading font-semibold">Stay in Touch</h2>
-          <p className="mt-3 text-muted-foreground">
-            Be the first to know about new arrivals, exclusive offers, and more.
-          </p>
-          <form className="mt-8 flex gap-2" onSubmit={handleNewsletterSubmit}>
-            <input
-              type="email"
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 border-b border-foreground/30 bg-transparent px-1 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-            />
-            <button
-              type="submit"
-              className="bg-foreground text-background px-6 py-3 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity whitespace-nowrap"
-            >
-              Subscribe
-            </button>
-          </form>
+        <div className="container-custom">
+          <div className="overflow-hidden rounded-md bg-foreground p-6 sm:p-10 lg:p-14">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Text + form */}
+              <div className="lg:col-span-6 space-y-6 lg:pr-6">
+                <h2 className="font-body font-bold tracking-tight text-background text-balance leading-[1.08] text-[clamp(1.875rem,3.6vw,2.75rem)]">
+                  Stay ahead with exclusive deals!
+                </h2>
+                <p className="text-[15px] text-background/60 leading-relaxed max-w-md">
+                  Be the first to know about special offers. Join our newsletter and get exclusive perks delivered straight to your inbox!
+                </p>
+                <form
+                  className="flex flex-wrap items-center gap-3 pt-2"
+                  onSubmit={handleNewsletterSubmit}
+                >
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="flex-1 min-w-[220px] rounded-full bg-white/80 border border-black/[0.06] px-5 py-3 text-sm placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="border border-background/90 hover:border-background rounded-full text-lg font-medium px-4 py-2 text-background hover:opacity-70 transition-opacity"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+
+              {/* Image right */}
+              <div className="lg:col-span-6">
+                <div className="relative overflow-hidden rounded-md w-full h-[377px] bg-muted shadow-[0_20px_50px_-25px_rgba(70,50,30,0.2)]">
+                  <Image
+                    src="/media/placeholders/email.avif"
+                    alt="Stay ahead with exclusive deals"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>
