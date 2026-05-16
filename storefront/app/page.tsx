@@ -107,41 +107,94 @@ export default function HomePage() {
       {/* homeBelowFeatured slot — recently viewed, newsletter plugins */}
       <ClientPluginSlot name="homeBelowFeatured" />
 
-      {/* Editorial / Brand Story Section */}
-      <section className="py-section bg-muted/30">
+      {/* Feature triplet — numbered values grid */}
+      <section className="py-section border-y border-border/60">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="aspect-[4/5] bg-muted rounded-sm overflow-hidden relative">
-              <Image
-                src={LIFESTYLE_PLACEHOLDER}
-                alt="Lifestyle - Our Philosophy"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="space-y-6 lg:max-w-md">
-              <p
-                className="text-sm uppercase tracking-[0.2em] font-bold"
-                style={{ color: 'hsl(var(--accent))' }}
-              >
-                Why Bold
-              </p>
-              <h2 className="text-h2 font-heading font-bold uppercase">
-                Quiet Is Overrated
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Every product in our collection is chosen for its quality, design, and the story behind it.
-                We believe in fewer, better things — pieces that last and bring joy to everyday moments.
-              </p>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide link-underline pb-0.5"
-                prefetch={true}
-              >
-                Learn More
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 lg:gap-16">
+            {[
+              {
+                num: '01',
+                title: 'Deliver with quality',
+                body: 'Every product is crafted with care and attention to detail, ensuring the best for your customers.',
+              },
+              {
+                num: '02',
+                title: 'Designed to impress',
+                body: 'A sleek, modern store that enhances your brand and creates a memorable shopping experience.',
+              },
+              {
+                num: '03',
+                title: 'Curated for you',
+                body: 'Handpicked selections that reflect the latest trends and timeless essentials.',
+              },
+            ].map((item) => (
+              <div key={item.num} className="space-y-4">
+                <p className="text-sm text-muted-foreground/70 font-medium tabular-nums">
+                  {item.num}
+                </p>
+                <h3 className="text-2xl font-body font-bold tracking-tight leading-snug">
+                  {item.title}
+                </h3>
+                <p className="text-[15px] text-muted-foreground leading-relaxed max-w-xs">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Editorial / Brand Story — cozy editorial luxury */}
+      <section className="py-section">
+        <div className="container-custom">
+          <div className="relative overflow-hidden rounded-lg bg-[#f7f3eb] p-6 sm:p-10 lg:p-16">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Image — nested concentric radii (double-bezel) */}
+              <div className="lg:col-span-6">
+                <div className="relative overflow-hidden rounded-md aspect-[4/5] bg-muted shadow-[0_24px_60px_-30px_rgba(70,50,30,0.22)]">
+                  <Image
+                    src={LIFESTYLE_PLACEHOLDER}
+                    alt="Lifestyle - Our Philosophy"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.03]"
+                  />
+                </div>
+              </div>
+
+              {/* Text */}
+              <div className="lg:col-span-6 space-y-6 lg:pl-4 xl:pl-10">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-black/[0.06] px-3.5 py-1.5 text-[11px] uppercase tracking-[0.2em] font-medium text-foreground/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                  Our philosophy
+                </span>
+
+                <h2 className="font-heading font-semibold leading-[1.05] tracking-tight text-balance text-[clamp(2rem,4vw,3.25rem)]">
+                  Quiet is overrated.
+                  <br />
+                  <span className="text-foreground/55">Comfort wins.</span>
+                </h2>
+
+                <p className="text-base lg:text-[17px] text-foreground/65 leading-relaxed max-w-md">
+                  Every piece is chosen for its quality, design, and the story behind it. We believe in fewer, better things — pieces that last and bring joy to everyday moments.
+                </p>
+
+                <div className="pt-2">
+                  <Link
+                    href="/about"
+                    className="group inline-flex items-center gap-3 rounded-full bg-foreground text-background pl-6 pr-1.5 py-1.5 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:pl-7 active:scale-[0.98]"
+                    prefetch={true}
+                  >
+                    <span>Read our story</span>
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/15 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                      <ArrowRight
+                        className="h-4 w-4 -rotate-45 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-0"
+                        strokeWidth={1.75}
+                      />
+                    </span>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
