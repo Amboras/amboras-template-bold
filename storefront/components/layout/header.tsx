@@ -179,7 +179,7 @@ export default function Header() {
             aria-modal="true"
             aria-label="Navigation menu"
             onKeyDown={handleMobileMenuKeyDown}
-            className="absolute inset-y-0 left-0 w-[88vw] max-w-sm bg-background animate-slide-in-right flex flex-col"
+            className="absolute inset-y-0 left-0 w-[88vw] max-w-sm bg-background animate-slide-in-left flex flex-col shadow-[0_24px_60px_-30px_rgba(0,0,0,0.25)]"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.06]">
               <Link

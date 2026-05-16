@@ -21,9 +21,17 @@ export default function HomePage() {
   return (
     <>
       {/* Hero — image-led editorial, single focal point */}
-      <section className="bg-background pt-4 pb-10 sm:pt-6 lg:pt-8 lg:pb-16">
+      <section className="bg-background pt-4 pb-8 sm:pt-6 sm:pb-10 lg:pt-8 lg:pb-16">
         <div className="container-custom">
-          <div className="relative overflow-hidden rounded-md aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.1/1] min-h-[460px] lg:min-h-[560px] animate-fade-in">
+          <div
+            className="relative overflow-hidden rounded-md flex flex-col justify-between
+                       aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.1/1]
+                       w-full animate-fade-in"
+            // ↑ Removed all min-h-* — they fight aspect-ratio on narrow viewports
+            //   and cause the hero to overflow its column. Let aspect-ratio alone
+            //   drive the height; the container width naturally scales it.
+          >
+            {/* Background image */}
             <Image
               src={HERO_PLACEHOLDER}
               alt="Hero - New Collection"
@@ -32,43 +40,59 @@ export default function HomePage() {
               className="object-cover"
               priority
             />
-
-            {/* Bottom gradient for legibility */}
+      
+            {/* Bottom gradient */}
             <div
               aria-hidden
-              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/55 via-black/15 to-transparent"
+              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none"
             />
-
-            {/* Bottom-left: pill CTA pair */}
-            <div className="absolute bottom-5 left-5 sm:bottom-6 sm:left-6 lg:bottom-8 lg:left-8 flex items-center gap-2">
-              <Link
-                href="/products"
-                className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]"
-                prefetch={true}
-              >
-                Shop now
-              </Link>
-              <Link
-                href="/products"
-                aria-label="Browse products"
-                className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5"
-                prefetch={true}
-              >
-                <ArrowRight
-                  className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:-rotate-[15deg]"
-                  strokeWidth={2}
-                />
-              </Link>
-            </div>
-
-            {/* Bottom-right: headline + subcopy */}
-            <div className="absolute bottom-6 right-5 left-5 sm:bottom-8 sm:right-8 sm:left-auto lg:bottom-10 lg:right-12 max-w-lg sm:text-right text-white animate-fade-in-up">
-              <h1 className="font-heading font-semibold leading-[1.04] tracking-tight text-balance text-[clamp(2.25rem,5.4vw,4rem)]">
-                Designed to stand out
-              </h1>
-              <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed sm:ml-auto sm:max-w-md">
-                High-contrast pieces for people who refuse to blend in shop the loudest drop of the season.
-              </p>
+      
+            {/* Content */}
+            <div className="relative z-10 flex flex-col justify-between h-full p-4 sm:p-6 lg:p-8 min-w-0">
+              {/* ↑ min-w-0 prevents flex children from blowing out the column */}
+              <div />
+      
+              {/* Bottom row */}
+              <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between sm:gap-6 animate-fade-in-up min-w-0">
+                {/* ↑ Changed sm:justify-between → md:justify-between to match the
+                      md:flex-row breakpoint; avoids justify-between on a column */}
+      
+                {/* CTA pair */}
+                <div className="flex flex-shrink-0 items-center gap-2">
+                  <Link
+                    href="/products"
+                    className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]"
+                    prefetch={true}
+                  >
+                    Shop now
+                  </Link>
+                  <Link
+                    href="/products"
+                    aria-label="Browse products"
+                    className="group inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5"
+                    prefetch={true}
+                    // ↑ Added shrink-0 so the icon circle never gets squeezed
+                  >
+                    <ArrowRight
+                      className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:-rotate-[15deg]"
+                      strokeWidth={2}
+                    />
+                  </Link>
+                </div>
+      
+                {/* Headline + subcopy */}
+                <div className="min-w-0 sm:max-w-md md:text-right text-white">
+                  {/* ↑ min-w-0 lets this flex child shrink below its content size */}
+                  <h1 className="font-heading font-semibold leading-[1.05] tracking-tight text-balance text-[clamp(1.1rem,3.5vw,3rem)]">
+                    {/* ↑ Tightened clamp ceiling (4rem → 3rem) and growth rate so
+                          the headline never runs off-screen at mid-range widths */}
+                    Designed to stand out
+                  </h1>
+                  <p className="mt-1.5 sm:mt-3 text-xs sm:text-base text-white/85 leading-snug sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
+                    High-contrast pieces for people who refuse to blend in — shop the loudest drop of the season.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
