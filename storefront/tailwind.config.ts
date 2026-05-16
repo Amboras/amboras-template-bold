@@ -42,7 +42,7 @@ const config: Config = {
         'h4': ['1.25rem', { lineHeight: '1.4' }],
       },
       maxWidth: {
-        'content': '1280px',
+        'content': '1600px',
       },
       spacing: {
         'section': '6rem',

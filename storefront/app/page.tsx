@@ -20,54 +20,56 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-muted/30 overflow-hidden">
-        <div className="container-custom grid lg:grid-cols-2 gap-8 items-center py-section lg:py-32">
-          {/* Text Content */}
-          <div className="space-y-6 animate-fade-in-up">
-            <p
-              className="text-sm uppercase tracking-[0.2em] font-bold"
-              style={{ color: 'hsl(var(--accent))' }}
-            >
-              ✦ Bold Collection
-            </p>
-            <h1 className="text-display font-heading font-bold text-balance uppercase">
-              Designed To Stand Out.
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
-              High-contrast pieces for people who refuse to blend in. Shop the
-              loudest drop of the season.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: 'hsl(var(--accent))' }}
-                prefetch={true}
-              >
-                Shop the Drop
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 border-brand-primary border px-8 py-3.5 text-sm font-semibold uppercase tracking-wide hover:bg-brand-primary hover:text-white transition-colors"
-                prefetch={true}
-              >
-                Our Story
-              </Link>
-            </div>
-          </div>
-
-          {/* Hero Image */}
-          <div className="relative aspect-[4/5] lg:aspect-[3/4] bg-muted rounded-sm overflow-hidden animate-fade-in">
+      {/* Hero — image-led editorial, single focal point */}
+      <section className="bg-background pt-4 pb-10 sm:pt-6 lg:pt-8 lg:pb-16">
+        <div className="container-custom">
+          <div className="relative overflow-hidden rounded-md aspect-[4/5] sm:aspect-[16/9] lg:aspect-[2.1/1] min-h-[460px] lg:min-h-[560px] animate-fade-in">
             <Image
               src={HERO_PLACEHOLDER}
               alt="Hero - New Collection"
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="100vw"
               className="object-cover"
               priority
             />
+
+            {/* Bottom gradient for legibility */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/55 via-black/15 to-transparent"
+            />
+
+            {/* Bottom-left: pill CTA pair */}
+            <div className="absolute bottom-5 left-5 sm:bottom-6 sm:left-6 lg:bottom-8 lg:left-8 flex items-center gap-2">
+              <Link
+                href="/products"
+                className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98]"
+                prefetch={true}
+              >
+                Shop now
+              </Link>
+              <Link
+                href="/products"
+                aria-label="Browse products"
+                className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5"
+                prefetch={true}
+              >
+                <ArrowRight
+                  className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:-rotate-[15deg]"
+                  strokeWidth={2}
+                />
+              </Link>
+            </div>
+
+            {/* Bottom-right: headline + subcopy */}
+            <div className="absolute bottom-6 right-5 left-5 sm:bottom-8 sm:right-8 sm:left-auto lg:bottom-10 lg:right-12 max-w-lg sm:text-right text-white animate-fade-in-up">
+              <h1 className="font-heading font-semibold leading-[1.04] tracking-tight text-balance text-[clamp(2.25rem,5.4vw,4rem)]">
+                Designed to stand out
+              </h1>
+              <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed sm:ml-auto sm:max-w-md">
+                High-contrast pieces for people who refuse to blend in shop the loudest drop of the season.
+              </p>
+            </div>
           </div>
         </div>
       </section>
