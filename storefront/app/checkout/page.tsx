@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     step, setStep, cart, shippingOptions, loadingShipping,
     submitShippingStep, completeCheckout,
     isUpdating, error, clearError,
-    sessions, availableProviders, loadingProviders,
+    sessions, selectProvider, availableProviders, loadingProviders,
   } = useCheckout()
 
   const { data: checkoutSettings } = useCheckoutSettings()
@@ -79,6 +79,9 @@ export default function CheckoutPage() {
 
   const [marketingOptIn, setMarketingOptIn] = useState(false)
   const [selectedShipping, setSelectedShipping] = useState('')
+  // Which payment method (registry entry) the buyer has selected. Drives which
+  // single adapter renders; switching re-initializes that provider's session.
+  const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null)
 
   const hasItems = cart?.items && cart.items.length > 0
   const currency = cart?.currency_code || 'usd'
@@ -553,21 +556,63 @@ export default function CheckoutPage() {
                       )
                     }
 
-                    // Shopify-style stacked layout: express options on top
-                    // (PayPal Smart Buttons, future Apple/Google Pay), divider,
-                    // form below (Stripe Payment Element with its own
-                    // Card/Bank/Cash App tabs). Each adapter receives its own
-                    // session.data — useCheckout initialized them in parallel.
-                    const expressProviders = availableProviders.filter((p) => p.kind === 'express')
-                    const formProviders = availableProviders.filter((p) => p.kind !== 'express')
+                    // Medusa keeps ONE payment session per collection, so the
+                    // buyer picks a single method and only that provider's
+                    // session is initialized. The default (a card form) is
+                    // auto-selected and initialized by useCheckout.
+                    const defaultEntry =
+                      availableProviders.find((p) => p.kind !== 'express') ?? availableProviders[0]
+                    const activeMethodId = selectedMethodId ?? defaultEntry?.id
+                    const activeProvider =
+                      availableProviders.find((p) => p.id === activeMethodId) ?? defaultEntry
 
-                    const renderAdapter = (provider: typeof availableProviders[number]) => {
-                      const Adapter = provider.Component
+                    if (!activeProvider) {
                       return (
+                        <div className="rounded-md bg-white/80 border border-black/[0.06] p-6 flex items-center justify-center">
+                          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                          <span className="ml-2 text-sm text-muted-foreground">Initializing payment...</span>
+                        </div>
+                      )
+                    }
+
+                    const Adapter = activeProvider.Component
+
+                    return (
+                      <div className="space-y-4">
+                        {availableProviders.length > 1 && (
+                          <div className="space-y-2">
+                            {availableProviders.map((provider) => (
+                              <label
+                                key={provider.id}
+                                className={`flex items-center gap-3 p-4 rounded-md bg-white/80 border cursor-pointer transition-colors ${
+                                  provider.id === activeProvider.id
+                                    ? 'border-foreground ring-2 ring-foreground/10'
+                                    : 'border-black/[0.06] hover:border-foreground/30'
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="payment-method"
+                                  value={provider.id}
+                                  checked={provider.id === activeProvider.id}
+                                  onChange={() => {
+                                    if (provider.id === activeProvider.id) return
+                                    setSelectedMethodId(provider.id)
+                                    selectProvider(provider.id)
+                                  }}
+                                  disabled={isUpdating}
+                                  className="accent-foreground"
+                                />
+                                <span className="text-sm font-medium">{provider.label}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+
                         <Adapter
-                          key={provider.id}
+                          key={activeProvider.id}
                           cart={cart}
-                          sessionData={sessions[provider.id] ?? null}
+                          sessionData={sessions[activeProvider.id] ?? null}
                           isCompleting={isUpdating}
                           onApproved={async () => {
                             const order = await completeCheckout()
@@ -578,32 +623,6 @@ export default function CheckoutPage() {
                           }}
                           onError={(msg) => { clearError(); toast.error(msg) }}
                         />
-                      )
-                    }
-
-                    return (
-                      <div className="space-y-4">
-                        {expressProviders.length > 0 && (
-                          <div className="space-y-3">
-                            {expressProviders.map(renderAdapter)}
-                          </div>
-                        )}
-
-                        {expressProviders.length > 0 && formProviders.length > 0 && (
-                          <div className="flex items-center gap-3 my-2">
-                            <div className="flex-1 border-t border-black/[0.08]" />
-                            <span className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                              or pay with card
-                            </span>
-                            <div className="flex-1 border-t border-black/[0.08]" />
-                          </div>
-                        )}
-
-                        {formProviders.length > 0 && (
-                          <div className="space-y-3">
-                            {formProviders.map(renderAdapter)}
-                          </div>
-                        )}
                       </div>
                     )
                   })()}

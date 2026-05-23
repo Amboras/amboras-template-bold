@@ -36,7 +36,18 @@ export function useCheckout() {
   const [step, setStep] = useState<CheckoutStep>('shipping')
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Medusa allows ONE payment session per collection — initiating a session
+  // deletes any existing one (createPaymentSessionsWorkflow: "we don't support
+  // split payments"). So we keep a single active provider session at a time,
+  // not one per provider. `sessions` therefore holds at most one entry, keyed
+  // by the selected provider's Medusa id, so the adapter lookups still work.
   const [sessions, setSessions] = useState<SessionDataMap>({})
+  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null)
+  // Track (cart.id + cart.total + provider) so we re-initialize the payment
+  // session when a discount/shipping change alters the amount mid-checkout, or
+  // when the buyer switches provider — otherwise Stripe's PaymentIntent has a
+  // stale amount and confirmPayment throws "elements should have a mounted
+  // Payment Element".
   const initializedFor = useRef<string | null>(null)
   const [isCompletingCheckout, setIsCompletingCheckout] = useState(false)
 
@@ -89,66 +100,83 @@ export function useCheckout() {
     }
   }
 
+  const cartTotal = (cart as any)?.total as number | undefined
+
   /**
-   * Initialize a payment session for ONE provider and return its session.data.
-   * Used by the parallel-init effect below — separated so each call's failure
-   * doesn't block the others (one provider failing shouldn't hide the rest).
+   * Initialize the payment session for ONE provider and make it the active
+   * one. A single, non-concurrent call is safe: the /store/payment-collections
+   * route returns the cart's existing collection if one exists and only
+   * creates (and races) when called concurrently — which we never do here.
+   * Initiating the session deletes any other provider's session on the
+   * collection, so `sessions` is reset to just this provider's entry.
    */
-  const initializeOne = async (providerId: string): Promise<Record<string, unknown> | null> => {
-    if (!cart?.id) return null
+  const initSession = async (providerId: string): Promise<void> => {
+    if (!cart?.id) return
+    setIsUpdating(true)
+    setError(null)
     try {
       const response = await getMedusaClient().store.payment.initiatePaymentSession(cart, {
         provider_id: providerId,
       })
-      const allSessions = ((response as any)?.payment_collection?.payment_sessions ?? []) as Array<{
+      const pc = (response as any)?.payment_collection
+      // Cache the collection back onto the cart so the next initiate reuses it
+      // (the SDK skips the create call when cart.payment_collection.id is set).
+      if (pc) {
+        queryClient.setQueryData(['cart'], (old: any) =>
+          old ? { ...old, payment_collection: pc } : old,
+        )
+      }
+      const allSessions = (pc?.payment_sessions ?? []) as Array<{
         provider_id: string
         status: string
         data?: Record<string, unknown>
       }>
-      // Per official Medusa docs: find the PENDING session (initiating a new
-      // session marks the previous one canceled — pending is the active one).
-      // For multi-provider eager init, we fan out a separate call per provider
-      // so each ends up with its own pending session. Medusa supports multiple
-      // provider sessions on a single payment_collection — only one is
-      // captured at cart.complete (whichever the buyer's flow activates).
+      // The pending session is the active one (initiating cancels the prior).
       const session =
         allSessions.find((s) => s.provider_id === providerId && s.status === 'pending') ||
         allSessions.find((s) => s.provider_id === providerId)
-      return session?.data ?? null
-    } catch (err) {
+      setSessions({ [providerId]: session?.data ?? null })
+    } catch (err: any) {
       logger.debug(`initiatePaymentSession failed for ${providerId}`, err)
-      return null
+      setError(err?.message || 'Failed to initialize payment')
+      setSessions({ [providerId]: null })
+    } finally {
+      setIsUpdating(false)
     }
   }
 
-  // Eager parallel init: when entering payment step, initialize a session
-  // for EVERY available provider in parallel. This is the Shopify-style
-  // "show everything at once" requirement — adapters render simultaneously,
-  // each using its own session data. Costs N parallel API calls instead of
-  // 1 — both Stripe + PayPal happily allow this and neither charges for it.
+  // Buyer picks a payment method (card form, PayPal, wallet…). Switching
+  // re-initializes the session for that provider, which is exactly what
+  // Medusa's one-session-per-collection model needs.
+  const selectProvider = (providerId: string) => {
+    if (!cart?.id) return
+    setSelectedProviderId(providerId)
+    initializedFor.current = `${cart.id}:${cartTotal}:${providerId}`
+    void initSession(providerId)
+  }
+
+  // On entering the payment step, auto-select a default provider and
+  // initialize exactly ONE session. Re-runs when the amount changes
+  // (discount/shipping) for the selected provider only — never concurrently.
   useEffect(() => {
     if (step !== 'payment' || !cart?.id || loadingProviders) return
-    // Re-init if cart changes; don't re-init if same cart already initialized
-    if (initializedFor.current === cart.id) return
     if (availableProviders.length === 0) return
+    // Skip when the cart total is zero (full discount) — no PaymentIntent; the
+    // UI shows a "No payment required" panel instead.
+    if (!cartTotal || cartTotal <= 0) return
 
-    initializedFor.current = cart.id
-    setIsUpdating(true)
+    // Prefer a non-express (card form) provider as the default selection.
+    const defaultProvider =
+      availableProviders.find((p) => p.kind !== 'express') ?? availableProviders[0]
+    const target = selectedProviderId ?? defaultProvider.id
 
-    Promise.all(
-      availableProviders.map(async (p) => {
-        const data = await initializeOne(p.id)
-        return [p.id, data] as const
-      }),
-    )
-      .then((entries) => {
-        const next: SessionDataMap = {}
-        for (const [id, data] of entries) next[id] = data
-        setSessions(next)
-      })
-      .finally(() => setIsUpdating(false))
+    const key = `${cart.id}:${cartTotal}:${target}`
+    if (initializedFor.current === key) return
+    initializedFor.current = key
+    if (!selectedProviderId) setSelectedProviderId(target)
+    void initSession(target)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, cart?.id, loadingProviders, availableProviders.length])
+  }, [step, cart?.id, cartTotal, loadingProviders, availableProviders.length, selectedProviderId])
 
   const completeCheckout = async () => {
     if (!cart?.id) return null
@@ -166,7 +194,7 @@ export function useCheckout() {
     try {
       // Demo fallback path — initialize the system_default session if no
       // real provider is configured for this region. Real providers (Stripe,
-      // PayPal) already initialized their session via the eager effect.
+      // PayPal) already initialized their session when the buyer selected them.
       if (availableProviders.length === 0) {
         await getMedusaClient().store.payment.initiatePaymentSession(cart, {
           provider_id: SYSTEM_DEFAULT_PROVIDER_ID,
@@ -237,6 +265,8 @@ export function useCheckout() {
     error,
     clearError: () => setError(null),
     sessions,
+    selectedProviderId,
+    selectProvider,
     availableProviders,
     loadingProviders,
   }

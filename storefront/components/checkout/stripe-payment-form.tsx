@@ -2,7 +2,13 @@
 
 import { useState, useMemo } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import {
+  Elements,
+  PaymentElement,
+  ExpressCheckoutElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js'
 import { Loader2 } from 'lucide-react'
 
 interface StripePaymentFormProps {
@@ -22,19 +28,23 @@ function CheckoutForm({
   const stripe = useStripe()
   const elements = useElements()
   const [isProcessing, setIsProcessing] = useState(false)
+  // Whether the buyer's device/browser offers any one-tap wallet (Apple Pay /
+  // Google Pay / Link). Stays false until the Express Checkout Element reports
+  // it has methods to show — on unsupported contexts (e.g. http localhost) it
+  // never flips, so the express row + divider stay hidden.
+  const [expressAvailable, setExpressAvailable] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Wallet buttons and the card form confirm the SAME PaymentIntent (its
+  // clientSecret lives on the parent <Elements>), so the backend path is
+  // identical — only the buyer's input method differs.
+  const runConfirm = async () => {
     if (!stripe || !elements) return
-
     setIsProcessing(true)
-
     try {
       const { error } = await stripe.confirmPayment({
         elements,
         redirect: 'if_required',
       })
-
       if (error) {
         onError(error.message || 'Payment failed. Please try again.')
       } else {
@@ -47,10 +57,30 @@ function CheckoutForm({
     }
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await runConfirm()
+  }
+
   const busy = isProcessing || isCompletingOrder
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* One-tap wallets (Apple Pay / Google Pay / Link). Self-hides when the
+          device/browser has none — and only renders over HTTPS, so it stays
+          invisible on http localhost. Confirms the same PaymentIntent. */}
+      <ExpressCheckoutElement
+        onReady={(event) => setExpressAvailable(Boolean(event.availablePaymentMethods))}
+        onConfirm={runConfirm}
+      />
+      {expressAvailable && (
+        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="h-px flex-1 bg-black/[0.08]" />
+          Or pay with card
+          <span className="h-px flex-1 bg-black/[0.08]" />
+        </div>
+      )}
+
       <PaymentElement
         options={{
           layout: 'tabs',
